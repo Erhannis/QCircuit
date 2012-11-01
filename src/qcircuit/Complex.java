@@ -11,4 +11,12 @@ package qcircuit;
 public class Complex {
     public double real = 0;
     public double imag = 0;
+    
+    public double norm() {
+        return Math.sqrt(this.normsqr());
+    }
+    
+    public double normsqr() {
+        return ((real * real) + (imag * imag));
+    }
 }

@@ -13,11 +13,14 @@ import java.util.HashMap;
  */
 public class QUtils {
     public static int makeStateIndex(int i, int[] bits, HashMap<Integer, Integer> bitvals) {
-        int bucket = i;
-        Arrays.sort(bits);
-        for (int j = bits.length - 1; j >= 0; j--) {
-            
-        }
-        return bucket;
+//        int bucket = i;
+//        Arrays.sort(bits);
+//        bucket = ((bucket >> bits[bits.length - 1]) << 1) + bitvals.get(bits[bits.length - 1]);
+//        bucket = bucket << bits[bits.length - 1]
+//        for (int j = bits.length - 2; j >= 0; j--) {
+//            bucket = (bucket << 1) + bitvals.get(bits[j]);
+//        }
+//        return bucket;
+        return -1;
     }
 }
