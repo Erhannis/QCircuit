@@ -42,16 +42,16 @@ public class MainTest {
 //            System.out.println(padLeft(Integer.toBinaryString(i), state.bits));
 //        }
         
-        CNot cnot = new CNot();
+        //CNot cnot = new CNot();
         for (int i = 0; i < (1 << state.bits); i++) {
             state.initZeros();
             for (int j = 0; j < state.bits; j++) {
                 if ((i & (1 << j)) > 0) {
-                    cnot.execute(state, new int[] {j});
+                    CNot.execute(state, new int[] {j});
                 }
             }
             System.out.print(toBitString(state.rMeasure()) + " -> ");
-            cnot.execute(state, new int[]{2,1,0});
+            CNot.execute(state, new int[]{2,1,0});
             System.out.println(toBitString(state.rMeasure()));
         }
     }
