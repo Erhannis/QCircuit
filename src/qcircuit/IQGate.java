@@ -9,6 +9,6 @@ package qcircuit;
  * @author erhannis
  */
 public interface IQGate {
-    //public void execute(QState state, int[] bits);
-    //public void reverseExecute(QState state, int[] bits);
+    public void execute(QState state);
+    public void reverseExecute(QState state);
 }

@@ -53,6 +53,7 @@ public class QViewport extends javax.swing.JPanel {
     public static final Color COLOR_SELNODE = Color.green.darker();
     public static final Color COLOR_WIRE = Color.white;    
     public static final Color COLOR_GATE = Color.orange;
+    public static final Color COLOR_RUN = Color.white;
     
     /** Creates new form QViewport */
     public QViewport(QCircuitView parent) {
@@ -120,6 +121,33 @@ public class QViewport extends javax.swing.JPanel {
                     
                 } else {
                     
+                }
+            }
+        }
+        if (parent.isTestRun) {
+            for (int ci = 0; ci < parent.circuits.size(); ci++) {
+                QCircuit c = parent.circuits.get(ci);
+                QState s = parent.states.get(ci);
+                QState s2 = s.copy();
+                int[] bits = s.rMeasure();
+                double endx = c.origin.x;
+                for (int i = 0; i < c.bits; i++) {
+                    double endy = c.origin.y + (c.wireSpace * i);
+                    g.setColor(COLOR_BACKGROUND);
+                    g.fill(new java.awt.geom.Ellipse2D.Double(c.origin.x - (c.gateSize * 0.5), c.origin.y + (i * c.wireSpace) - (c.gateSize * 0.5), c.gateSize, c.gateSize));
+                    g.setColor(COLOR_RUN);
+                    g.draw(new java.awt.geom.Ellipse2D.Double(c.origin.x - (c.gateSize * 0.5), c.origin.y + (i * c.wireSpace) - (c.gateSize * 0.5), c.gateSize, c.gateSize));
+                    g.drawString(Integer.toString(bits[i]), (float)(endx - (c.gateSize * 0.25)), (float)(endy + (c.gateSize * 0.25)));
+                }
+                for (int i = 0; i < c.gates.size(); i++) {
+                    IQGate gt = c.gates.get(i);
+                    gt.execute(s2);
+                    bits = s2.rMeasure();
+                    endx = c.origin.x + c.excessWire + (i * c.gateSpace) + c.gateSize;
+                    for (int j = 0; j < c.bits; j++) {
+                        double endy = c.origin.y + (c.wireSpace * j);
+                        g.drawString(Integer.toString(bits[j]), (float)(endx - (c.gateSize * 0.25)), (float)(endy + (c.gateSize * 0.25)));
+                    }
                 }
             }
         }
@@ -207,17 +235,28 @@ public class QViewport extends javax.swing.JPanel {
                             if (parent.groupTools.isSelected(parent.radioAddCircuit.getModel())) {
                                 ctrlEvent = new CtrlEvent() {
                                     public QCircuit newCircuit;
+                                    public QState newState;
                                     
                                     @Override
                                     public void init() {
                                         newCircuit = new QCircuit(1, clickX, clickY);
                                         parent.circuits.add(newCircuit);
+                                        if (parent.isTestRun) {
+                                            newState = new QState(newCircuit.bits);
+                                            newState.initZeros();
+                                            parent.states.add(newState);
+                                        }
                                         repaintVP();
                                     }
 
                                     @Override
                                     public void addClick(double x, double y) {
                                         newCircuit.bits++;
+                                        if (parent.isTestRun) {
+                                            newState.bits++;
+                                            newState.allocInitStates();
+                                            newState.initZeros();
+                                        }
                                         repaintVP();
                                     }
 
@@ -285,7 +324,7 @@ public class QViewport extends javax.swing.JPanel {
                                             }
                                             repaintVP();
                                         } else {
-                                            System.out.println("c in null!");
+                                            System.out.println("c is null!");
                                         }
                                     }
 
@@ -297,16 +336,40 @@ public class QViewport extends javax.swing.JPanel {
                                         }
                                     }
                                 };
+                            } else if (parent.groupTools.isSelected(parent.radioToggle.getModel())) {
                             } else {
-                            
                             }
                         } else {
                             ctrlEvent.addClick(clickX, clickY);
                         }
-                    }
-                    if (e.getClickCount() > 1) {
                     } else {
+                        if (parent.groupTools.isSelected(parent.radioToggle.getModel())) {
+                            if (parent.isTestRun) {
+                                boolean done = false;
+                                for (int ci = 0; ci < parent.circuits.size(); ci++) {
+                                    QCircuit c = parent.circuits.get(ci);
+                                    double endx = c.origin.x;
+                                    for (int i = 0; i < c.bits; i++) {
+                                        double endy = c.origin.y + (c.wireSpace * i);
+                                        if (QUtils.dist(clickX, clickY, endx, endy) <= (c.gateSize * 0.5)) {
+                                            CNot.execute(parent.states.get(ci), new int[]{i});
+                                            done = true;
+                                            break;
+                                        }
+                                    }
+                                    if (done)
+                                        break;
+                                }
+                                if (done)
+                                    repaintVP();
+                            }
+                        } else {
+                            
+                        }                     
                     }
+//                    if (e.getClickCount() > 1) {
+//                    } else {
+//                    }
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     JPopupMenu menu = new JPopupMenu();
                     JMenuItem mitemAddCircuit = new JMenuItem("Add Circuit");

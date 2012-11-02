@@ -24,6 +24,13 @@ public class QState {
         }
     }
     
+    public void allocInitStates() {
+        states = new Complex[(int)Math.pow(2, bits)];
+        for (int i = 0; i < (int)Math.pow(2, bits); i++) {
+            states[i] = new Complex();
+        }
+    }    
+    
     public void initZeros() {
         if (states.length > 0) {
             states[0].real = 1;
@@ -69,6 +76,14 @@ public class QState {
         int[] result = new int[bits];
         for (int i = 0; i < bits; i++) {
             result[i] = (int)(pm[i] + 0.5);
+        }
+        return result;
+    }
+    
+    public QState copy() {
+        QState result = new QState(this.bits);
+        for (int i = 0; i < states.length; i++) {
+            result.states[i] = this.states[i].copy();
         }
         return result;
     }

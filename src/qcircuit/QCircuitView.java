@@ -23,6 +23,9 @@ import javax.swing.JFrame;
 public class QCircuitView extends FrameView {
     public ArrayList<QCircuit> circuits = new ArrayList<QCircuit>();
     
+    // Test run things.
+    public ArrayList<QState> states;
+    
     public QViewport vp;
     
     public void init() {
@@ -104,6 +107,8 @@ public class QCircuitView extends FrameView {
         panelToolbar = new javax.swing.JPanel();
         radioAddCircuit = new javax.swing.JRadioButton();
         radioAddCNot = new javax.swing.JRadioButton();
+        boxTestRun = new javax.swing.JCheckBox();
+        radioToggle = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         panelProperties = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
@@ -134,6 +139,18 @@ public class QCircuitView extends FrameView {
         radioAddCNot.setText(resourceMap.getString("radioAddCNot.text")); // NOI18N
         radioAddCNot.setName("radioAddCNot"); // NOI18N
 
+        boxTestRun.setText(resourceMap.getString("boxTestRun.text")); // NOI18N
+        boxTestRun.setName("boxTestRun"); // NOI18N
+        boxTestRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boxTestRunActionPerformed(evt);
+            }
+        });
+
+        groupTools.add(radioToggle);
+        radioToggle.setText(resourceMap.getString("radioToggle.text")); // NOI18N
+        radioToggle.setName("radioToggle"); // NOI18N
+
         javax.swing.GroupLayout panelToolbarLayout = new javax.swing.GroupLayout(panelToolbar);
         panelToolbar.setLayout(panelToolbarLayout);
         panelToolbarLayout.setHorizontalGroup(
@@ -142,7 +159,9 @@ public class QCircuitView extends FrameView {
                 .addContainerGap()
                 .addGroup(panelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(radioAddCircuit)
-                    .addComponent(radioAddCNot))
+                    .addComponent(radioAddCNot)
+                    .addComponent(boxTestRun)
+                    .addComponent(radioToggle))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
         panelToolbarLayout.setVerticalGroup(
@@ -152,7 +171,11 @@ public class QCircuitView extends FrameView {
                 .addComponent(radioAddCircuit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioAddCNot)
-                .addContainerGap(234, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioToggle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                .addComponent(boxTestRun)
+                .addContainerGap())
         );
 
         jSplitPane2.setLeftComponent(panelToolbar);
@@ -225,7 +248,27 @@ public class QCircuitView extends FrameView {
         setMenuBar(menuBar);
     }// </editor-fold>//GEN-END:initComponents
 
+    public boolean isTestRun = false;
+    
+private void boxTestRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxTestRunActionPerformed
+    isTestRun = boxTestRun.isSelected();
+    if (isTestRun) {
+        initTestRun();
+        vp.repaintVP();
+    }
+}//GEN-LAST:event_boxTestRunActionPerformed
+
+public void initTestRun() {
+    this.states = new ArrayList<QState>();
+    for (int i = 0; i < circuits.size(); i++) {
+        QState s = new QState(circuits.get(i).bits);
+        s.initZeros();
+        this.states.add(s);
+    }
+}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox boxTestRun;
     public javax.swing.ButtonGroup groupTools;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
@@ -236,6 +279,7 @@ public class QCircuitView extends FrameView {
     private javax.swing.JPanel panelToolbar;
     public javax.swing.JRadioButton radioAddCNot;
     public javax.swing.JRadioButton radioAddCircuit;
+    public javax.swing.JRadioButton radioToggle;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
