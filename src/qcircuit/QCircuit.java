@@ -20,12 +20,20 @@ public class QCircuit implements IQCircuit {
     public Point.Double origin = new Point.Double(0, 0);
     public double scale = 1;
     public double wireSpace = 20 * scale;
-    public double gateSpace = wireSpace;
+    public double gateSpace = wireSpace * 1.5;
     public double excessWire = 2 * gateSpace;
     public double gateSize = 0.75 * wireSpace;
     public static final Color COLOR_SELECTED = new Color(0xD0, 0xFF, 0xFF);
     public static final Color COLOR_UNSELECTED = Color.cyan;
     public Color color = COLOR_UNSELECTED;
+    
+    public void switchRunMode(boolean runMode) {
+        if (runMode) {
+            gateSpace = wireSpace * 1.5;
+        } else {
+            gateSpace = wireSpace;
+        }
+    }
     
     public QCircuit(int bits) {
         this.bits = bits;

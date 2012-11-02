@@ -4,6 +4,7 @@
  */
 package qcircuit;
 
+import java.awt.Color;
 import java.util.Arrays;
 
 /**
@@ -14,6 +15,9 @@ import java.util.Arrays;
  */
 public class CNot implements IQGate {
     public int[] bits;
+    public static final Color COLOR_SELECTED = Color.orange.brighter();
+    public static final Color COLOR_UNSELECTED = Color.orange;
+    public Color color = COLOR_UNSELECTED;
     
     public CNot(int[] bits) {
         this.bits = bits;
@@ -119,5 +123,21 @@ public class CNot implements IQGate {
 
     public static void reverseExecute(QState state, int[] bits) {
         execute(state, bits);
+    }
+    
+    public Color getColor() {
+        return color;
+    }
+    
+    public void setColor(Color color) {
+        this.color = color;
+    }
+    
+    public void setSelected(boolean selected) {
+        if (selected) {
+            this.color = COLOR_SELECTED;
+        } else {
+            this.color = COLOR_UNSELECTED;
+        }
     }
 }

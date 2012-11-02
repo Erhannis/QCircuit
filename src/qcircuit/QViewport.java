@@ -104,9 +104,9 @@ public class QViewport extends javax.swing.JPanel {
             for (int i = 0; i < c.bits; i++) {                
                 g.draw(new java.awt.geom.Line2D.Double(c.origin.x, c.origin.y + (i * c.wireSpace), c.origin.x + (c.excessWire * 2) + (c.gateSpace * (c.gates.size() > 0 ? c.gates.size() - 1 : 0)), c.origin.y + (i * c.wireSpace)));
             }
-            g.setColor(COLOR_GATE);
             for (int i = 0; i < c.gates.size(); i++) {
                 IQGate gt = c.gates.get(i);
+                g.setColor(gt.getColor());
                 if (gt instanceof CNot) {
                     CNot cn = (CNot)gt;
                     for (int j = 1; j < cn.bits.length; j++) {
@@ -183,12 +183,16 @@ public class QViewport extends javax.swing.JPanel {
     }
     
     public CtrlEvent ctrlEvent = null;
+    public QCircuit selectedCircuit = null;
+    public IQGate selectedGate = null;
     
     public void init() {
         this.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet.");
+                if (e.getKeyChar() == KeyEvent.VK_DELETE) {
+                    parent.deleteAction();
+                }
             }
 
             public void keyPressed(KeyEvent e) {
@@ -239,9 +243,18 @@ public class QViewport extends javax.swing.JPanel {
                                     
                                     @Override
                                     public void init() {
+                                        if (selectedGate != null) {
+                                            selectedGate.setSelected(false);
+                                            selectedGate = null;
+                                        }
+                                        if (selectedCircuit != null) {
+                                            selectedCircuit.color = QCircuit.COLOR_UNSELECTED;
+                                            selectedCircuit = null;
+                                        }
                                         newCircuit = new QCircuit(1, clickX, clickY);
-                                        parent.circuits.add(newCircuit);
-                                        if (parent.isTestRun) {
+                                        newCircuit.switchRunMode(parent.isTestRun);
+                                        parent.circuits.add(newCircuit);                                        
+                                        if (parent.isTestRun) {                                            
                                             newState = new QState(newCircuit.bits);
                                             newState.initZeros();
                                             parent.states.add(newState);
@@ -271,6 +284,11 @@ public class QViewport extends javax.swing.JPanel {
                                     
                                     @Override
                                     public void init() {
+                                        if (selectedGate != null) {
+                                            selectedGate.setSelected(false);
+                                            selectedGate = null;
+                                        }
+                                        selectedCircuit = null;
                                         for (QCircuit c : parent.circuits) {
                                             c.color = QCircuit.COLOR_UNSELECTED;
                                         }
@@ -337,6 +355,8 @@ public class QViewport extends javax.swing.JPanel {
                                     }
                                 };
                             } else if (parent.groupTools.isSelected(parent.radioToggle.getModel())) {
+                            } else if (parent.groupTools.isSelected(parent.radioSelectCircuit.getModel())) {
+                            } else if (parent.groupTools.isSelected(parent.radioSelectGate.getModel())) {
                             } else {
                             }
                         } else {
@@ -363,36 +383,77 @@ public class QViewport extends javax.swing.JPanel {
                                 if (done)
                                     repaintVP();
                             }
+                        } else if (parent.groupTools.isSelected(parent.radioSelectCircuit.getModel())) {
+                            if (selectedCircuit != null) {
+                                selectedCircuit.color = QCircuit.COLOR_UNSELECTED;
+                                selectedCircuit = null;
+                            }
+                            if (selectedGate != null) {
+                                selectedGate.setSelected(false);
+                                selectedGate = null;
+                            }
+                            for (QCircuit c : parent.circuits) {
+                                if (c.origin.x <= clickX
+                                        && c.origin.y - (c.gateSize * 0.5) <= clickY
+                                        && c.origin.x + (c.excessWire * 2) + (c.gateSpace * c.gates.size()) >= clickX
+                                        && c.origin.y + (c.wireSpace * (c.bits - 1)) + (c.gateSize * 0.5) >= clickY) {
+                                    selectedCircuit = c;
+                                    c.color = QCircuit.COLOR_SELECTED;
+                                    break;
+                                }
+                            }
+                            repaintVP();
+                        } else if (parent.groupTools.isSelected(parent.radioSelectGate.getModel())) {
+                            if (selectedGate != null) {
+                                selectedGate.setSelected(false);
+                                selectedGate = null;
+                            }
+                            if (selectedCircuit != null) {
+                                int xIndex = (int)(((clickX - selectedCircuit.origin.x - selectedCircuit.excessWire) / selectedCircuit.gateSpace) + 0.5);
+//                                int yIndex = (int)(((clickY - selectedCircuit.origin.y) / selectedCircuit.wireSpace) + 0.5);
+                                if (xIndex < 0) {
+                                    xIndex = 0;
+                                } else if(xIndex >= selectedCircuit.gates.size()) {
+                                    xIndex = selectedCircuit.gates.size() - 1;
+                                }
+//                                if (yIndex < 0) {
+//                                    yIndex = 0;
+//                                } else if (yIndex >= selectedCircuit.bits) {
+//                                    yIndex = selectedCircuit.bits - 1;
+//                                }
+                                selectedCircuit.gates.get(xIndex).setSelected(true);
+                                selectedGate = selectedCircuit.gates.get(xIndex);
+                            }
+                            repaintVP();
                         } else {
-                            
-                        }                     
+                        }
                     }
 //                    if (e.getClickCount() > 1) {
 //                    } else {
 //                    }
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
-                    JPopupMenu menu = new JPopupMenu();
-                    JMenuItem mitemAddCircuit = new JMenuItem("Add Circuit");
-                    JMenuItem mitemAddCNot = new JMenuItem("Add CNot");
-                    mitemAddCircuit.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            parent.circuits.add(new QCircuit(4, clickX, clickY));
-                            repaintVP();
-                        }
-                    });
-                    mitemAddCNot.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            QCircuit c = parent.circuits.get(0);
-                            c.gates.add(new CNot(new int[]{1,2,3}));
-                            repaintVP();
-                        }
-                    });
-                    menu.add(mitemAddCircuit);
-                    menu.add(mitemAddCNot);
-//                    if (selected.size() == 2) {
-//                        menu.add(mitemToggleConnection);
-//                    }
-                    menu.show(QViewport.this, e.getX(), e.getY());
+//                    JPopupMenu menu = new JPopupMenu();
+//                    JMenuItem mitemAddCircuit = new JMenuItem("Add Circuit");
+//                    JMenuItem mitemAddCNot = new JMenuItem("Add CNot");
+//                    mitemAddCircuit.addActionListener(new ActionListener() {
+//                        public void actionPerformed(ActionEvent e) {
+//                            parent.circuits.add(new QCircuit(4, clickX, clickY));
+//                            repaintVP();
+//                        }
+//                    });
+//                    mitemAddCNot.addActionListener(new ActionListener() {
+//                        public void actionPerformed(ActionEvent e) {
+//                            QCircuit c = parent.circuits.get(0);
+//                            c.gates.add(new CNot(new int[]{1,2,3}));
+//                            repaintVP();
+//                        }
+//                    });
+//                    menu.add(mitemAddCircuit);
+//                    menu.add(mitemAddCNot);
+////                    if (selected.size() == 2) {
+////                        menu.add(mitemToggleConnection);
+////                    }
+//                    menu.show(QViewport.this, e.getX(), e.getY());
                 }
             }
 

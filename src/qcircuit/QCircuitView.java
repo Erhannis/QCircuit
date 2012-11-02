@@ -109,8 +109,11 @@ public class QCircuitView extends FrameView {
         radioAddCNot = new javax.swing.JRadioButton();
         boxTestRun = new javax.swing.JCheckBox();
         radioToggle = new javax.swing.JRadioButton();
+        radioSelectCircuit = new javax.swing.JRadioButton();
+        radioSelectGate = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         panelProperties = new javax.swing.JPanel();
+        btnDelete = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -151,6 +154,14 @@ public class QCircuitView extends FrameView {
         radioToggle.setText(resourceMap.getString("radioToggle.text")); // NOI18N
         radioToggle.setName("radioToggle"); // NOI18N
 
+        groupTools.add(radioSelectCircuit);
+        radioSelectCircuit.setText(resourceMap.getString("radioSelectCircuit.text")); // NOI18N
+        radioSelectCircuit.setName("radioSelectCircuit"); // NOI18N
+
+        groupTools.add(radioSelectGate);
+        radioSelectGate.setText(resourceMap.getString("radioSelectGate.text")); // NOI18N
+        radioSelectGate.setName("radioSelectGate"); // NOI18N
+
         javax.swing.GroupLayout panelToolbarLayout = new javax.swing.GroupLayout(panelToolbar);
         panelToolbar.setLayout(panelToolbarLayout);
         panelToolbarLayout.setHorizontalGroup(
@@ -161,8 +172,10 @@ public class QCircuitView extends FrameView {
                     .addComponent(radioAddCircuit)
                     .addComponent(radioAddCNot)
                     .addComponent(boxTestRun)
-                    .addComponent(radioToggle))
-                .addContainerGap(37, Short.MAX_VALUE))
+                    .addComponent(radioToggle)
+                    .addComponent(radioSelectCircuit)
+                    .addComponent(radioSelectGate))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         panelToolbarLayout.setVerticalGroup(
             panelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,7 +186,11 @@ public class QCircuitView extends FrameView {
                 .addComponent(radioAddCNot)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioToggle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioSelectCircuit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioSelectGate)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                 .addComponent(boxTestRun)
                 .addContainerGap())
         );
@@ -199,15 +216,29 @@ public class QCircuitView extends FrameView {
 
         panelProperties.setName("panelProperties"); // NOI18N
 
+        btnDelete.setText(resourceMap.getString("btnDelete.text")); // NOI18N
+        btnDelete.setName("btnDelete"); // NOI18N
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelPropertiesLayout = new javax.swing.GroupLayout(panelProperties);
         panelProperties.setLayout(panelPropertiesLayout);
         panelPropertiesLayout.setHorizontalGroup(
             panelPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 673, Short.MAX_VALUE)
+            .addGroup(panelPropertiesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnDelete)
+                .addContainerGap(601, Short.MAX_VALUE))
         );
         panelPropertiesLayout.setVerticalGroup(
             panelPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 144, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPropertiesLayout.createSequentialGroup()
+                .addContainerGap(102, Short.MAX_VALUE)
+                .addComponent(btnDelete)
+                .addContainerGap())
         );
 
         jSplitPane1.setRightComponent(panelProperties);
@@ -254,9 +285,56 @@ private void boxTestRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     isTestRun = boxTestRun.isSelected();
     if (isTestRun) {
         initTestRun();
-        vp.repaintVP();
     }
+    for (int i = 0; i < circuits.size(); i++) {
+        circuits.get(i).switchRunMode(isTestRun);
+    }
+    vp.repaintVP();
 }//GEN-LAST:event_boxTestRunActionPerformed
+
+private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    if (groupTools.isSelected(radioSelectCircuit.getModel())) {
+        if (vp.selectedCircuit != null) {
+            int index = circuits.indexOf(vp.selectedCircuit);
+            if (index == -1) {
+                vp.selectedCircuit.color = QCircuit.COLOR_UNSELECTED;
+                if (vp.selectedGate != null) {
+                    vp.selectedGate.setSelected(false);
+                }
+                vp.selectedCircuit = null;
+                vp.selectedGate = null;
+                vp.repaintVP();
+                return;
+            }
+            circuits.remove(index);
+            if (states != null && states.size() > index) {
+                states.remove(index);
+            }
+            vp.selectedCircuit = null;
+            vp.selectedGate = null;
+            vp.repaintVP();
+        }
+    } else if (groupTools.isSelected(radioSelectGate.getModel())) {
+        if (vp.selectedCircuit != null && vp.selectedGate != null) {
+            int index = vp.selectedCircuit.gates.indexOf(vp.selectedGate);
+            if (index == -1) {
+                vp.selectedCircuit = null;
+                vp.selectedGate = null;
+                vp.repaintVP();
+                return;
+            }
+            vp.selectedCircuit.gates.remove(index);
+            vp.selectedGate = null;            
+            vp.repaintVP();
+        }
+    } else {
+        
+    }
+}//GEN-LAST:event_btnDeleteActionPerformed
+
+public void deleteAction() {
+    this.btnDeleteActionPerformed(null);
+}
 
 public void initTestRun() {
     this.states = new ArrayList<QState>();
@@ -269,6 +347,7 @@ public void initTestRun() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox boxTestRun;
+    public javax.swing.JButton btnDelete;
     public javax.swing.ButtonGroup groupTools;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
@@ -279,6 +358,8 @@ public void initTestRun() {
     private javax.swing.JPanel panelToolbar;
     public javax.swing.JRadioButton radioAddCNot;
     public javax.swing.JRadioButton radioAddCircuit;
+    public javax.swing.JRadioButton radioSelectCircuit;
+    public javax.swing.JRadioButton radioSelectGate;
     public javax.swing.JRadioButton radioToggle;
     // End of variables declaration//GEN-END:variables
 
