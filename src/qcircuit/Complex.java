@@ -4,6 +4,8 @@
  */
 package qcircuit;
 
+import java.text.NumberFormat;
+
 /**
  *
  * @author erhannis
@@ -30,5 +32,55 @@ public class Complex {
     
     public Complex copy() {
         return new Complex(this.real, this.imag);
+    }
+    
+    public Complex times(Complex b) {
+        return new Complex((this.real * b.real) - (this.imag * b.imag), (this.imag * b.real) + (this.real * b.imag));
+    }
+
+    public Complex div(Complex b) {
+        return new Complex((((this.real*b.real)+(this.imag*b.imag))/((b.real*b.real)+(b.imag*b.imag))),(((this.imag*b.real)-(this.real*b.imag))/((b.real*b.real)+(b.imag*b.imag))));
+    }
+    
+    public Complex plus(Complex b) {
+        return new Complex(this.real + b.real, this.imag + b.imag);
+    }
+
+    public Complex minus(Complex b) {
+        return new Complex(this.real - b.real, this.imag - b.imag);
+    }
+    
+    public Complex times(double b) {
+        return new Complex(this.real * b, this.imag * b);
+    }
+
+    public Complex div(double b) {
+        return new Complex(this.real / b, this.imag / b);
+    }
+    
+    public Complex plus(double b) {
+        return new Complex(this.real + b, this.imag);
+    }
+
+    public Complex minus(double b) {
+        return new Complex(this.real - b, this.imag);
+    }
+
+    public Complex conjugate() {
+        return new Complex(this.real, -(this.imag));
+    }
+    
+    public static NumberFormat nf = NumberFormat.getInstance();
+    static {
+        nf.setMaximumFractionDigits(2);
+    }
+    
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(nf.format(real));
+        if (imag >= 0)
+            sb.append("+");
+        sb.append(nf.format(imag) + "i");
+        return sb.toString();
     }
 }

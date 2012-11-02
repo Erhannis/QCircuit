@@ -4,6 +4,8 @@
  */
 package qcircuit;
 
+import java.text.NumberFormat;
+
 /**
  *
  * @author erhannis
@@ -18,6 +20,16 @@ public class QState {
         this.bits = bits;
         states = new Complex[(int)Math.pow(2, bits)];
         if (INIT_ALL) {
+            for (int i = 0; i < (int)Math.pow(2, bits); i++) {
+                states[i] = new Complex();
+            }
+        }
+    }
+
+    public QState(int bits, boolean init) {
+        this.bits = bits;
+        states = new Complex[(int)Math.pow(2, bits)];
+        if (init) {
             for (int i = 0; i < (int)Math.pow(2, bits); i++) {
                 states[i] = new Complex();
             }
@@ -79,6 +91,33 @@ public class QState {
         }
         return result;
     }
+
+    /**
+     * Performs a measurement, but doesn't affect the state as
+     * it should. This assumes the probabilities add up to 1.
+     * @return 
+     */
+    public int[] fakeMeasure() {//System.out.println(this.toString());this.pMeasure()
+        double target = QUtils.r.nextDouble();
+        double cur = 0;
+        for (int i = 0; i < states.length; i++) {
+            cur += states[i].normsqr();
+            if (cur > target) {
+                int[] result = new int[bits];
+                for (int j = 0; j < bits; j++) {
+                    if ((i & 1) > 0) {
+                        result[j] = 1;
+                    } else {
+                        result[j] = 0;
+                    }
+                    i = i >> 1;
+                }
+                return result;
+            }
+        }
+        int[] result = new int[bits];
+        return result;
+    }
     
     public QState copy() {
         QState result = new QState(this.bits);
@@ -86,5 +125,20 @@ public class QState {
             result.states[i] = this.states[i].copy();
         }
         return result;
+    }
+    
+    /**
+     * Be Careful with this; don't forget that with modest numbers of bits, you can end up with huge numbers of states.
+     * @return 
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (states.length > 0) {
+            sb.append("(" + states[0].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(0), bits) + ">");
+        }
+        for (int i = 1; i < states.length; i++) {
+            sb.append("+(" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
+        }
+        return sb.toString();
     }
 }

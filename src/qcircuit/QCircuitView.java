@@ -16,6 +16,7 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  * The application's main frame.
@@ -100,6 +101,7 @@ public class QCircuitView extends FrameView {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         mainPanel = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
@@ -111,6 +113,12 @@ public class QCircuitView extends FrameView {
         radioToggle = new javax.swing.JRadioButton();
         radioSelectCircuit = new javax.swing.JRadioButton();
         radioSelectGate = new javax.swing.JRadioButton();
+        radioAddHadamard = new javax.swing.JRadioButton();
+        radioProbRound = new javax.swing.JRadioButton();
+        radioProb = new javax.swing.JRadioButton();
+        radioMeasure = new javax.swing.JRadioButton();
+        radioAddMatrixGate = new javax.swing.JRadioButton();
+        radioStateProbe = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         panelProperties = new javax.swing.JPanel();
         btnDelete = new javax.swing.JButton();
@@ -118,18 +126,21 @@ public class QCircuitView extends FrameView {
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
+        mitemHelp = new javax.swing.JMenuItem();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         groupTools = new javax.swing.ButtonGroup();
+        groupRunMeasureMethod = new javax.swing.ButtonGroup();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        jSplitPane1.setDividerLocation(300);
+        jSplitPane1.setDividerLocation(400);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         jSplitPane2.setDividerLocation(150);
         jSplitPane2.setName("jSplitPane2"); // NOI18N
 
+        panelToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         panelToolbar.setName("panelToolbar"); // NOI18N
 
         groupTools.add(radioAddCircuit);
@@ -162,6 +173,66 @@ public class QCircuitView extends FrameView {
         radioSelectGate.setText(resourceMap.getString("radioSelectGate.text")); // NOI18N
         radioSelectGate.setName("radioSelectGate"); // NOI18N
 
+        groupTools.add(radioAddHadamard);
+        radioAddHadamard.setText(resourceMap.getString("radioAddHadamard.text")); // NOI18N
+        radioAddHadamard.setName("radioAddHadamard"); // NOI18N
+
+        groupRunMeasureMethod.add(radioProbRound);
+        radioProbRound.setSelected(true);
+        radioProbRound.setText(resourceMap.getString("radioProbRound.text")); // NOI18N
+        radioProbRound.setName("radioProbRound"); // NOI18N
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioProbRound, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        radioProbRound.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioProbRoundActionPerformed(evt);
+            }
+        });
+
+        groupRunMeasureMethod.add(radioProb);
+        radioProb.setText(resourceMap.getString("radioProb.text")); // NOI18N
+        radioProb.setName("radioProb"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioProb, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        radioProb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioProbActionPerformed(evt);
+            }
+        });
+
+        groupRunMeasureMethod.add(radioMeasure);
+        radioMeasure.setText(resourceMap.getString("radioMeasure.text")); // NOI18N
+        radioMeasure.setName("radioMeasure"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioMeasure, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        radioMeasure.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioMeasureActionPerformed(evt);
+            }
+        });
+
+        groupTools.add(radioAddMatrixGate);
+        radioAddMatrixGate.setText(resourceMap.getString("radioAddMatrixGate.text")); // NOI18N
+        radioAddMatrixGate.setName("radioAddMatrixGate"); // NOI18N
+        radioAddMatrixGate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioAddMatrixGateActionPerformed(evt);
+            }
+        });
+
+        groupTools.add(radioStateProbe);
+        radioStateProbe.setText(resourceMap.getString("radioStateProbe.text")); // NOI18N
+        radioStateProbe.setName("radioStateProbe"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioStateProbe, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
         javax.swing.GroupLayout panelToolbarLayout = new javax.swing.GroupLayout(panelToolbar);
         panelToolbar.setLayout(panelToolbarLayout);
         panelToolbarLayout.setHorizontalGroup(
@@ -171,11 +242,20 @@ public class QCircuitView extends FrameView {
                 .addGroup(panelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(radioAddCircuit)
                     .addComponent(radioAddCNot)
-                    .addComponent(boxTestRun)
                     .addComponent(radioToggle)
+                    .addComponent(radioSelectGate)
+                    .addComponent(radioAddHadamard)
                     .addComponent(radioSelectCircuit)
-                    .addComponent(radioSelectGate))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(radioAddMatrixGate)
+                    .addComponent(boxTestRun)
+                    .addGroup(panelToolbarLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(panelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(radioProb)
+                            .addComponent(radioProbRound)
+                            .addComponent(radioMeasure)))
+                    .addComponent(radioStateProbe))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelToolbarLayout.setVerticalGroup(
             panelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,13 +265,25 @@ public class QCircuitView extends FrameView {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioAddCNot)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioAddHadamard)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioAddMatrixGate)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioToggle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioSelectCircuit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioSelectGate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioStateProbe)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(boxTestRun)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioProbRound)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioProb)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioMeasure)
                 .addContainerGap())
         );
 
@@ -203,17 +295,18 @@ public class QCircuitView extends FrameView {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 517, Short.MAX_VALUE)
+            .addGap(0, 679, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(jPanel3);
 
         jSplitPane1.setTopComponent(jSplitPane2);
 
+        panelProperties.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         panelProperties.setName("panelProperties"); // NOI18N
 
         btnDelete.setText(resourceMap.getString("btnDelete.text")); // NOI18N
@@ -231,12 +324,12 @@ public class QCircuitView extends FrameView {
             .addGroup(panelPropertiesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnDelete)
-                .addContainerGap(601, Short.MAX_VALUE))
+                .addContainerGap(759, Short.MAX_VALUE))
         );
         panelPropertiesLayout.setVerticalGroup(
             panelPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPropertiesLayout.createSequentialGroup()
-                .addContainerGap(102, Short.MAX_VALUE)
+                .addContainerGap(154, Short.MAX_VALUE)
                 .addComponent(btnDelete)
                 .addContainerGap())
         );
@@ -247,11 +340,11 @@ public class QCircuitView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 835, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -269,6 +362,15 @@ public class QCircuitView extends FrameView {
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
+        mitemHelp.setText(resourceMap.getString("mitemHelp.text")); // NOI18N
+        mitemHelp.setName("mitemHelp"); // NOI18N
+        mitemHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitemHelpActionPerformed(evt);
+            }
+        });
+        helpMenu.add(mitemHelp);
+
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
         helpMenu.add(aboutMenuItem);
@@ -277,6 +379,8 @@ public class QCircuitView extends FrameView {
 
         setComponent(mainPanel);
         setMenuBar(menuBar);
+
+        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
     public boolean isTestRun = false;
@@ -332,6 +436,41 @@ private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     }
 }//GEN-LAST:event_btnDeleteActionPerformed
 
+    public ComplexMatrix currentGateMatrix = null;
+    public int matrixBits = -1;
+
+private void radioAddMatrixGateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioAddMatrixGateActionPerformed
+    String input = JOptionPane.showInputDialog("Please input the matrix in the form of either\none list of 2^(2n) real numbers, separated by semicolons, or\ntwo such lists (real and complex coefficients), separated from each other by a colon.", null);
+    String[] strings = input.split("\\|");
+    if (strings.length == 1) {
+        MatrixGate matrixGate = new MatrixGate(strings[0]);
+        currentGateMatrix = matrixGate.matrix;
+        matrixBits = matrixGate.bits;
+    } else if (strings.length == 2) {
+        MatrixGate matrixGate = new MatrixGate(strings[0], strings[1]);
+        currentGateMatrix = matrixGate.matrix;
+        matrixBits = matrixGate.bits;
+    } else {
+        JOptionPane.showMessageDialog(null, "Your input registers more than one | (or less than 0?).  This is invalid.", input, busyIconIndex);
+    }
+}//GEN-LAST:event_radioAddMatrixGateActionPerformed
+
+private void radioProbRoundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioProbRoundActionPerformed
+    vp.repaintVP();
+}//GEN-LAST:event_radioProbRoundActionPerformed
+
+private void radioProbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioProbActionPerformed
+    vp.repaintVP();
+}//GEN-LAST:event_radioProbActionPerformed
+
+private void radioMeasureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMeasureActionPerformed
+    vp.repaintVP();
+}//GEN-LAST:event_radioMeasureActionPerformed
+
+private void mitemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemHelpActionPerformed
+    
+}//GEN-LAST:event_mitemHelpActionPerformed
+
 public void deleteAction() {
     this.btnDeleteActionPerformed(null);
 }
@@ -348,19 +487,28 @@ public void initTestRun() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox boxTestRun;
     public javax.swing.JButton btnDelete;
+    public javax.swing.ButtonGroup groupRunMeasureMethod;
     public javax.swing.ButtonGroup groupTools;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem mitemHelp;
     private javax.swing.JPanel panelProperties;
     private javax.swing.JPanel panelToolbar;
     public javax.swing.JRadioButton radioAddCNot;
     public javax.swing.JRadioButton radioAddCircuit;
+    public javax.swing.JRadioButton radioAddHadamard;
+    public javax.swing.JRadioButton radioAddMatrixGate;
+    public javax.swing.JRadioButton radioMeasure;
+    public javax.swing.JRadioButton radioProb;
+    public javax.swing.JRadioButton radioProbRound;
     public javax.swing.JRadioButton radioSelectCircuit;
     public javax.swing.JRadioButton radioSelectGate;
+    public javax.swing.JRadioButton radioStateProbe;
     public javax.swing.JRadioButton radioToggle;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;

@@ -6,12 +6,15 @@ package qcircuit;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  *
  * @author erhannis
  */
 public class QUtils {
+    public static Random r = new Random();
+    
     public static int makeStateIndex(int i, int[] bits, HashMap<Integer, Integer> bitvals) {
 //        int bucket = i;
 //        Arrays.sort(bits);
@@ -30,5 +33,42 @@ public class QUtils {
     
     public static double distSqr(double x1, double y1, double x2, double y2) {
         return (((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
+    }
+    
+    public static String padLeft(String s, int length) {
+        while (s.length() < length) {
+            s = "0" + s;
+        }
+        return s;
+    }
+    
+    public static void printBitString(int[] bits) {
+        for (int i = bits.length - 1; i >= 0; i--) {
+            System.out.print(bits[i]);
+        }
+        System.out.println("");
+    }
+
+    public static void printBitString(double[] bits) {
+        for (int i = bits.length - 1; i >= 0; i--) {
+            System.out.print(bits[i]);
+        }
+        System.out.println("");
+    }
+    
+    public static String toBitString(int[] bits) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = bits.length - 1; i >= 0; i--) {
+            sb.append(bits[i]);
+        }
+        return sb.toString();
+    }
+
+    public static String toBitString(double[] bits) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = bits.length - 1; i >= 0; i--) {
+            sb.append(bits[i]);
+        }
+        return sb.toString();
     }
 }

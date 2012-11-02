@@ -10,19 +10,19 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="1" pref="673" max="32767" attributes="0"/>
+              <Component id="jSplitPane1" alignment="1" pref="835" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="1" pref="450" max="32767" attributes="0"/>
+              <Component id="jSplitPane1" alignment="1" pref="606" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="jSplitPane1">
           <Properties>
-            <Property name="dividerLocation" type="int" value="300"/>
+            <Property name="dividerLocation" type="int" value="400"/>
             <Property name="orientation" type="int" value="0"/>
             <Property name="name" type="java.lang.String" value="jSplitPane1" noResource="true"/>
           </Properties>
@@ -44,6 +44,11 @@
               <SubComponents>
                 <Container class="javax.swing.JPanel" name="panelToolbar">
                   <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                        <EtchetBorder/>
+                      </Border>
+                    </Property>
                     <Property name="name" type="java.lang.String" value="panelToolbar" noResource="true"/>
                   </Properties>
                   <Constraints>
@@ -60,12 +65,23 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="radioAddCircuit" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="radioAddCNot" min="-2" max="-2" attributes="0"/>
-                                  <Component id="boxTestRun" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="radioToggle" min="-2" max="-2" attributes="0"/>
-                                  <Component id="radioSelectCircuit" min="-2" max="-2" attributes="0"/>
                                   <Component id="radioSelectGate" min="-2" max="-2" attributes="0"/>
+                                  <Component id="radioAddHadamard" min="-2" max="-2" attributes="0"/>
+                                  <Component id="radioSelectCircuit" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="radioAddMatrixGate" min="-2" max="-2" attributes="0"/>
+                                  <Component id="boxTestRun" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="radioProb" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="radioProbRound" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="radioMeasure" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="radioStateProbe" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="20" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -77,13 +93,25 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioAddCNot" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioAddHadamard" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioAddMatrixGate" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioToggle" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioSelectCircuit" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioSelectGate" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="108" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioStateProbe" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="24" max="32767" attributes="0"/>
                               <Component id="boxTestRun" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioProbRound" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioProb" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioMeasure" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -160,6 +188,103 @@
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                       </AuxValues>
                     </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioAddHadamard">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupTools"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="radioAddHadamard.text"/>
+                        <Property name="name" type="java.lang.String" value="radioAddHadamard" noResource="true"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioProbRound">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupRunMeasureMethod"/>
+                        </Property>
+                        <Property name="selected" type="boolean" value="true"/>
+                        <Property name="text" type="java.lang.String" resourceKey="radioProbRound.text"/>
+                        <Property name="name" type="java.lang.String" value="radioProbRound" noResource="true"/>
+                      </Properties>
+                      <BindingProperties>
+                        <BindingProperty name="enabled" source="boxTestRun" sourcePath="${selected}" target="radioProbRound" targetPath="enabled" updateStrategy="0" immediately="false"/>
+                      </BindingProperties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioProbRoundActionPerformed"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioProb">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupRunMeasureMethod"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="radioProb.text"/>
+                        <Property name="name" type="java.lang.String" value="radioProb" noResource="true"/>
+                      </Properties>
+                      <BindingProperties>
+                        <BindingProperty name="enabled" source="boxTestRun" sourcePath="${selected}" target="radioProb" targetPath="enabled" updateStrategy="0" immediately="false"/>
+                      </BindingProperties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioProbActionPerformed"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioMeasure">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupRunMeasureMethod"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="radioMeasure.text"/>
+                        <Property name="name" type="java.lang.String" value="radioMeasure" noResource="true"/>
+                      </Properties>
+                      <BindingProperties>
+                        <BindingProperty name="enabled" source="boxTestRun" sourcePath="${selected}" target="radioMeasure" targetPath="enabled" updateStrategy="0" immediately="false"/>
+                      </BindingProperties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioMeasureActionPerformed"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioAddMatrixGate">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupTools"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="radioAddMatrixGate.text"/>
+                        <Property name="name" type="java.lang.String" value="radioAddMatrixGate" noResource="true"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioAddMatrixGateActionPerformed"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioStateProbe">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupTools"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="radioStateProbe.text"/>
+                        <Property name="name" type="java.lang.String" value="radioStateProbe" noResource="true"/>
+                      </Properties>
+                      <BindingProperties>
+                        <BindingProperty name="enabled" source="boxTestRun" sourcePath="${selected}" target="radioStateProbe" targetPath="enabled" updateStrategy="0" immediately="false"/>
+                      </BindingProperties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel3">
@@ -175,12 +300,12 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="517" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="679" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="300" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="400" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -189,6 +314,11 @@
             </Container>
             <Container class="javax.swing.JPanel" name="panelProperties">
               <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
                 <Property name="name" type="java.lang.String" value="panelProperties" noResource="true"/>
               </Properties>
               <Constraints>
@@ -203,14 +333,14 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnDelete" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="601" max="32767" attributes="0"/>
+                          <EmptySpace pref="759" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="102" max="32767" attributes="0"/>
+                          <EmptySpace pref="154" max="32767" attributes="0"/>
                           <Component id="btnDelete" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -279,6 +409,15 @@
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
           </AuxValues>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="mitemHelp">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="mitemHelp.text"/>
+                <Property name="name" type="java.lang.String" value="mitemHelp" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mitemHelpActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="aboutMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
@@ -296,6 +435,11 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.ButtonGroup" name="groupTools">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.ButtonGroup" name="groupRunMeasureMethod">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
@@ -319,6 +463,6 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,-35,0,0,2,-95"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,121,0,0,3,67"/>
   </AuxValues>
 </Form>

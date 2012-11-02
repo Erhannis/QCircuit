@@ -5,6 +5,7 @@
 package qcircuit;
 
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,6 +17,15 @@ public class MainTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        String input = JOptionPane.showInputDialog("Please input the matrix in the form of either\none list of 2^(2n) real numbers, separated by semicolons, or\ntwo such lists (real and complex coefficients), separated from each other by a colon.", null);
+        System.out.println(input.length()); // Result: Accepts at least 1MB.  Good enough.
+        if (1==1) return;
+        Matrix<Complex> m = new Matrix<Complex>(4,4,new ObjectGenerator<Complex>() {
+            @Override
+            public Complex generate() {
+                return new Complex();
+            }
+        });
         QState state = new QState(4);
         state.initZeros();
         int[] bits = {0, 2};
