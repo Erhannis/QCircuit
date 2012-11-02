@@ -4,6 +4,10 @@
 
 package qcircuit;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -11,10 +15,16 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -33,6 +43,8 @@ public class QCircuitView extends FrameView {
         
     }    
     
+    public ResourceMap resourceMap;
+    
     public QCircuitView(SingleFrameApplication app) {
         super(app);
         initComponents();
@@ -44,6 +56,9 @@ public class QCircuitView extends FrameView {
         
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
+        
+        this.resourceMap = resourceMap;
+        
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -124,6 +139,9 @@ public class QCircuitView extends FrameView {
         btnDelete = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
+        mitemNew = new javax.swing.JMenuItem();
+        mitemOpen = new javax.swing.JMenuItem();
+        mitemSaveAs = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         mitemHelp = new javax.swing.JMenuItem();
@@ -165,6 +183,9 @@ public class QCircuitView extends FrameView {
         radioToggle.setText(resourceMap.getString("radioToggle.text")); // NOI18N
         radioToggle.setName("radioToggle"); // NOI18N
 
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioToggle, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
         groupTools.add(radioSelectCircuit);
         radioSelectCircuit.setText(resourceMap.getString("radioSelectCircuit.text")); // NOI18N
         radioSelectCircuit.setName("radioSelectCircuit"); // NOI18N
@@ -182,7 +203,7 @@ public class QCircuitView extends FrameView {
         radioProbRound.setText(resourceMap.getString("radioProbRound.text")); // NOI18N
         radioProbRound.setName("radioProbRound"); // NOI18N
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioProbRound, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioProbRound, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         radioProbRound.addActionListener(new java.awt.event.ActionListener() {
@@ -242,10 +263,7 @@ public class QCircuitView extends FrameView {
                 .addGroup(panelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(radioAddCircuit)
                     .addComponent(radioAddCNot)
-                    .addComponent(radioToggle)
-                    .addComponent(radioSelectGate)
                     .addComponent(radioAddHadamard)
-                    .addComponent(radioSelectCircuit)
                     .addComponent(radioAddMatrixGate)
                     .addComponent(boxTestRun)
                     .addGroup(panelToolbarLayout.createSequentialGroup()
@@ -254,6 +272,9 @@ public class QCircuitView extends FrameView {
                             .addComponent(radioProb)
                             .addComponent(radioProbRound)
                             .addComponent(radioMeasure)))
+                    .addComponent(radioSelectCircuit)
+                    .addComponent(radioSelectGate)
+                    .addComponent(radioToggle)
                     .addComponent(radioStateProbe))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -269,11 +290,11 @@ public class QCircuitView extends FrameView {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioAddMatrixGate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(radioToggle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioSelectCircuit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioSelectGate)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioToggle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioStateProbe)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
@@ -352,6 +373,33 @@ public class QCircuitView extends FrameView {
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
+        mitemNew.setText(resourceMap.getString("mitemNew.text")); // NOI18N
+        mitemNew.setName("mitemNew"); // NOI18N
+        mitemNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitemNewActionPerformed(evt);
+            }
+        });
+        fileMenu.add(mitemNew);
+
+        mitemOpen.setText(resourceMap.getString("mitemOpen.text")); // NOI18N
+        mitemOpen.setName("mitemOpen"); // NOI18N
+        mitemOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitemOpenActionPerformed(evt);
+            }
+        });
+        fileMenu.add(mitemOpen);
+
+        mitemSaveAs.setText(resourceMap.getString("mitemSaveAs.text")); // NOI18N
+        mitemSaveAs.setName("mitemSaveAs"); // NOI18N
+        mitemSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitemSaveAsActionPerformed(evt);
+            }
+        });
+        fileMenu.add(mitemSaveAs);
+
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(qcircuit.QCircuitApp.class).getContext().getActionMap(QCircuitView.class, this);
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
         exitMenuItem.setName("exitMenuItem"); // NOI18N
@@ -362,6 +410,7 @@ public class QCircuitView extends FrameView {
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
+        mitemHelp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
         mitemHelp.setText(resourceMap.getString("mitemHelp.text")); // NOI18N
         mitemHelp.setName("mitemHelp"); // NOI18N
         mitemHelp.addActionListener(new java.awt.event.ActionListener() {
@@ -441,7 +490,7 @@ private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
 private void radioAddMatrixGateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioAddMatrixGateActionPerformed
     String input = JOptionPane.showInputDialog("Please input the matrix in the form of either\none list of 2^(2n) real numbers, separated by semicolons, or\ntwo such lists (real and complex coefficients), separated from each other by a colon.", null);
-    String[] strings = input.split("\\|");
+    String[] strings = input.split(":");
     if (strings.length == 1) {
         MatrixGate matrixGate = new MatrixGate(strings[0]);
         currentGateMatrix = matrixGate.matrix;
@@ -451,7 +500,7 @@ private void radioAddMatrixGateActionPerformed(java.awt.event.ActionEvent evt) {
         currentGateMatrix = matrixGate.matrix;
         matrixBits = matrixGate.bits;
     } else {
-        JOptionPane.showMessageDialog(null, "Your input registers more than one | (or less than 0?).  This is invalid.", input, busyIconIndex);
+        JOptionPane.showMessageDialog(null, "Your input registers more than one : (or less than 0?).  This is invalid.", input, busyIconIndex);
     }
 }//GEN-LAST:event_radioAddMatrixGateActionPerformed
 
@@ -467,9 +516,155 @@ private void radioMeasureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     vp.repaintVP();
 }//GEN-LAST:event_radioMeasureActionPerformed
 
+    public HelpFrame helpFrame = null;
+
 private void mitemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemHelpActionPerformed
-    
+    if (helpFrame == null) {
+        helpFrame = new HelpFrame(resourceMap.getString("appHelpLabel.text"));
+    }
+    helpFrame.setVisible(true);
 }//GEN-LAST:event_mitemHelpActionPerformed
+
+private void mitemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemNewActionPerformed
+    circuits = new ArrayList<QCircuit>();
+}//GEN-LAST:event_mitemNewActionPerformed
+
+    public JFileChooser chooser = new JFileChooser();
+
+private void mitemSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemSaveAsActionPerformed
+    if (chooser.showSaveDialog(this.getFrame()) == JFileChooser.APPROVE_OPTION) {
+        saveAll(chooser.getSelectedFile());
+    }
+}//GEN-LAST:event_mitemSaveAsActionPerformed
+
+private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemOpenActionPerformed
+    if (chooser.showOpenDialog(this.getFrame()) == JFileChooser.APPROVE_OPTION) {
+        loadAll(chooser.getSelectedFile());
+        vp.repaintVP();
+    }
+}//GEN-LAST:event_mitemOpenActionPerformed
+
+    public int VERSION = 1;
+
+    public void saveAll(File file) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            DataOutputStream dos = new DataOutputStream(fos);
+            dos.writeInt(VERSION);
+            dos.writeInt(circuits.size());
+            for (int i = 0; i < circuits.size(); i++) {
+                QCircuit c = circuits.get(i);
+                dos.writeInt(c.bits);
+                dos.writeDouble(c.origin.x);
+                dos.writeDouble(c.origin.y);
+                dos.writeDouble(c.excessWire);
+                dos.writeDouble(c.gateSize);
+                dos.writeDouble(c.gateSpace);
+                dos.writeDouble(c.scale);
+                dos.writeDouble(c.wireSpace);
+                dos.writeInt(c.gates.size());
+                for (int j = 0; j < c.gates.size(); j++) {
+                    IQGate ig = c.gates.get(j);
+                    if (ig instanceof CNot) {
+                        dos.writeUTF("CNot");
+                        dos.writeInt(((CNot)ig).bits.length);
+                        for (int k = 0; k < ((CNot)ig).bits.length; k++) {
+                            dos.writeInt(((CNot)ig).bits[k]);
+                        }
+                    } else if (ig instanceof Hadamard) {
+                        dos.writeUTF("Hadamard");
+                        dos.writeInt(((Hadamard)ig).bit);                        
+                    } else if (ig instanceof MatrixGate) {
+                        dos.writeUTF("Matrix");
+                        dos.writeInt(((MatrixGate)ig).bits);
+                        dos.writeUTF(((MatrixGate)ig).matrix.toSquareExportString());                        
+                    } else {
+                        dos.writeUTF("Unknown");
+                    }
+                }
+            }
+            dos.flush();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fos.flush();
+                fos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void loadAll(File file) {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            DataInputStream dis = new DataInputStream(fis);
+            int version = dis.readInt();
+            switch (version) {
+                case 1:
+                    int circuitsSize = dis.readInt();
+                    circuits = new ArrayList<QCircuit>();
+                    for (int i = 0; i < circuitsSize; i++) {
+                        int bits = dis.readInt();
+                        double cox = dis.readDouble();
+                        double coy = dis.readDouble();
+                        QCircuit c = new QCircuit(bits, cox, coy);
+                        c.excessWire = dis.readDouble();
+                        c.gateSize = dis.readDouble();
+                        c.gateSpace = dis.readDouble();
+                        c.scale = dis.readDouble();
+                        c.wireSpace = dis.readDouble();
+                        int gateCount = dis.readInt();
+                        c.gates = new ArrayList<IQGate>();
+                        for (int j = 0; j < gateCount; j++) {
+                            String type = dis.readUTF();
+                            if ("CNot".equals(type)) {
+                                int bitcount = dis.readInt();
+                                int[] bitsarray = new int[bitcount];
+                                for (int k = 0; k < bitcount; k++) {
+                                    bitsarray[k] = dis.readInt();
+                                }
+                                CNot cn = new CNot(bitsarray);
+                                c.gates.add(cn);
+                            } else if ("Hadamard".equals(type)) {
+                                int bit = dis.readInt();
+                                Hadamard h = new Hadamard(bit);
+                                c.gates.add(h);
+                            } else if ("Matrix".equals(type)) {
+                                int bitcount = dis.readInt();
+                                String csv = dis.readUTF();
+                                String[] mtxs = csv.split(":");
+                                MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
+                                c.gates.add(mg);
+                            } else if ("Unknown".equals(type)) {
+                                System.err.println("Read attempt to store a gate that was unknown.");
+                            } else {
+                                System.err.println("Unknown gate type: " + type);
+                            }
+                        }
+                        circuits.add(c);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fis.close();
+            } catch (IOException ex) {
+                Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
 public void deleteAction() {
     this.btnDeleteActionPerformed(null);
@@ -495,6 +690,9 @@ public void initTestRun() {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem mitemHelp;
+    private javax.swing.JMenuItem mitemNew;
+    private javax.swing.JMenuItem mitemOpen;
+    private javax.swing.JMenuItem mitemSaveAs;
     private javax.swing.JPanel panelProperties;
     private javax.swing.JPanel panelToolbar;
     public javax.swing.JRadioButton radioAddCNot;

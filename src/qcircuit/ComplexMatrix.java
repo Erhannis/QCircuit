@@ -26,4 +26,19 @@ public class ComplexMatrix {
             }
         }
     }
+    
+    public String toSquareExportString() {
+        StringBuilder real = new StringBuilder();
+        StringBuilder imag = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                real.append(Double.toString(values[i][j].real) + ";");
+                imag.append(Double.toString(values[i][j].imag) + ";");                
+            }
+        }
+        real.deleteCharAt(real.length() - 1);
+        imag.deleteCharAt(imag.length() - 1);
+        real.append(":" + imag);
+        return real.toString();
+    }
 }
