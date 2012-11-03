@@ -4,43 +4,75 @@
 
 package qcircuit;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 /**
  * The application's main frame.
  */
 public class QCircuitView extends FrameView {
     public ArrayList<QCircuit> circuits = new ArrayList<QCircuit>();
+    public QViewport vp;
+//    public HashMap<KeyStroke, Action> actionMap = new HashMap<KeyStroke, Action>();
     
     // Test run things.
     public ArrayList<QState> states;
     
-    public QViewport vp;
-    
-    public void init() {
         
+    public void init() {
+//        KeyStroke key1 = KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK);
+//        actionMap.put(key1, new AbstractAction("action1") {
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("blah");
+//            }
+//        });
+//        
+//        KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+//        kfm.addKeyEventDispatcher(new KeyEventDispatcher() {
+//            public boolean dispatchKeyEvent(KeyEvent e) {
+//                KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(e);
+//                if (actionMap.containsKey(keyStroke)) {
+//                    final Action a = actionMap.get(keyStroke);
+//                    final ActionEvent ae = new ActionEvent(e.getSource(), e.getID(), null);
+//                    SwingUtilities.invokeLater(new Runnable() {
+//                        public void run() {
+//                            a.actionPerformed(ae);
+//                        }
+//                    });
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
     }    
     
     public ResourceMap resourceMap;
@@ -98,7 +130,6 @@ public class QCircuitView extends FrameView {
         });
     }
 
-    @Action
     public void showAboutBox() {
         if (aboutBox == null) {
             JFrame mainFrame = QCircuitApp.getApplication().getMainFrame();
@@ -155,7 +186,7 @@ public class QCircuitView extends FrameView {
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
-        jSplitPane2.setDividerLocation(150);
+        jSplitPane2.setDividerLocation(180);
         jSplitPane2.setName("jSplitPane2"); // NOI18N
 
         panelToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -316,7 +347,7 @@ public class QCircuitView extends FrameView {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 679, Short.MAX_VALUE)
+            .addGap(0, 649, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -445,7 +476,7 @@ private void boxTestRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     vp.repaintVP();
 }//GEN-LAST:event_boxTestRunActionPerformed
 
-private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+public void deleteSelected() {
     if (groupTools.isSelected(radioSelectCircuit.getModel())) {
         if (vp.selectedCircuit != null) {
             int index = circuits.indexOf(vp.selectedCircuit);
@@ -483,6 +514,10 @@ private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     } else {
         
     }
+}
+
+private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    deleteSelected();
 }//GEN-LAST:event_btnDeleteActionPerformed
 
     public ComplexMatrix currentGateMatrix = null;
@@ -722,10 +757,6 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             }
         }
     }
-
-public void deleteAction() {
-    this.btnDeleteActionPerformed(null);
-}
 
 public void initTestRun() {
     this.states = new ArrayList<QState>();

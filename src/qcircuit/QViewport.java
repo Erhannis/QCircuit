@@ -224,8 +224,41 @@ public class QViewport extends javax.swing.JPanel {
         this.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_DELETE) {
-                    parent.deleteAction();
+                switch (Character.toUpperCase(e.getKeyChar())) {
+                    case KeyEvent.VK_DELETE:
+                        parent.deleteSelected();
+                        break;
+                    case KeyEvent.VK_C:
+                        parent.radioAddCircuit.setSelected(true);
+                        break;
+                    case KeyEvent.VK_N:
+                        parent.radioAddCNot.setSelected(true);
+                        break;
+                    case KeyEvent.VK_H:
+                        parent.radioAddHadamard.setSelected(true);
+                        break;
+                    case KeyEvent.VK_M:
+                        parent.radioAddMatrixGate.setSelected(true);
+                        break;
+                    case KeyEvent.VK_S:
+                        if (!parent.radioSelectCircuit.isSelected()) {
+                            parent.radioSelectCircuit.setSelected(true);
+                        } else {
+                            parent.radioSelectGate.setSelected(true);
+                        }
+                        break;
+                    case KeyEvent.VK_T:
+                        if (parent.isTestRun) {
+                            parent.radioToggle.setSelected(true);
+                        }
+                        break;
+                    case KeyEvent.VK_P:
+                        if (parent.isTestRun) {
+                            parent.radioStateProbe.setSelected(true);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
