@@ -9,5 +9,6 @@ package qcircuit;
  * @author erhannis
  */
 public interface IQCircuit {
-    
+    public ComplexMatrix toMatrix();
+    public ComplexMatrix toInverseMatrix();
 }

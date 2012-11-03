@@ -17,6 +17,15 @@ public class MainTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Hadamard h1 = new Hadamard(0, 4);
+        Hadamard h2 = new Hadamard(1, 4);
+        Hadamard h3 = new Hadamard(2, 4);
+        Hadamard h4 = new Hadamard(3, 4);
+        System.out.println(h1.toMatrix().toSquareExportString());
+        System.out.println(h2.toMatrix().toSquareExportString());
+        System.out.println(h3.toMatrix().toSquareExportString());
+        System.out.println(h4.toMatrix().toSquareExportString());
+        if (1==1) return;
         String input = JOptionPane.showInputDialog("Please input the matrix in the form of either\none list of 2^(2n) real numbers, separated by semicolons, or\ntwo such lists (real and complex coefficients), separated from each other by a colon.", null);
         System.out.println(input.length()); // Result: Accepts at least 1MB.  Good enough.
         if (1==1) return;

@@ -544,7 +544,7 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     }
 }//GEN-LAST:event_mitemOpenActionPerformed
 
-    public int VERSION = 1;
+    public int VERSION = 2;
 
     public void saveAll(File file) {
         FileOutputStream fos = null;
@@ -552,6 +552,7 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             fos = new FileOutputStream(file);
             DataOutputStream dos = new DataOutputStream(fos);
             dos.writeInt(VERSION);
+            dos.writeUTF("QCircuitSet");
             dos.writeInt(circuits.size());
             for (int i = 0; i < circuits.size(); i++) {
                 QCircuit c = circuits.get(i);
@@ -572,9 +573,11 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         for (int k = 0; k < ((CNot)ig).bits.length; k++) {
                             dos.writeInt(((CNot)ig).bits[k]);
                         }
+                        dos.writeInt(((CNot)ig).bitcount);
                     } else if (ig instanceof Hadamard) {
                         dos.writeUTF("Hadamard");
                         dos.writeInt(((Hadamard)ig).bit);                        
+                        dos.writeInt(((Hadamard)ig).bitcount);
                     } else if (ig instanceof MatrixGate) {
                         dos.writeUTF("Matrix");
                         dos.writeInt(((MatrixGate)ig).bits);
@@ -607,6 +610,7 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             int version = dis.readInt();
             switch (version) {
                 case 1:
+                {
                     int circuitsSize = dis.readInt();
                     circuits = new ArrayList<QCircuit>();
                     for (int i = 0; i < circuitsSize; i++) {
@@ -629,11 +633,11 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 for (int k = 0; k < bitcount; k++) {
                                     bitsarray[k] = dis.readInt();
                                 }
-                                CNot cn = new CNot(bitsarray);
+                                CNot cn = new CNot(bitsarray, 0);
                                 c.gates.add(cn);
                             } else if ("Hadamard".equals(type)) {
                                 int bit = dis.readInt();
-                                Hadamard h = new Hadamard(bit);
+                                Hadamard h = new Hadamard(bit, 0);
                                 c.gates.add(h);
                             } else if ("Matrix".equals(type)) {
                                 int bitcount = dis.readInt();
@@ -650,6 +654,59 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                         circuits.add(c);
                     }
                     break;
+                }
+                case 2:
+                {
+                    String fileType = dis.readUTF();
+                    if (!"QCircuitSet".equals(fileType)) {
+                        throw new IllegalArgumentException("File is not a QCircuitSet file!  Instead: " + fileType);
+                    }
+                    int circuitsSize = dis.readInt();
+                    circuits = new ArrayList<QCircuit>();
+                    for (int i = 0; i < circuitsSize; i++) {
+                        int bits = dis.readInt();
+                        double cox = dis.readDouble();
+                        double coy = dis.readDouble();
+                        QCircuit c = new QCircuit(bits, cox, coy);
+                        c.excessWire = dis.readDouble();
+                        c.gateSize = dis.readDouble();
+                        c.gateSpace = dis.readDouble();
+                        c.scale = dis.readDouble();
+                        c.wireSpace = dis.readDouble();
+                        int gateCount = dis.readInt();
+                        c.gates = new ArrayList<IQGate>();
+                        for (int j = 0; j < gateCount; j++) {
+                            String type = dis.readUTF();
+                            if ("CNot".equals(type)) {
+                                int bitcount = dis.readInt();
+                                int[] bitsarray = new int[bitcount];
+                                for (int k = 0; k < bitcount; k++) {
+                                    bitsarray[k] = dis.readInt();
+                                }
+                                int totalbits = dis.readInt();
+                                CNot cn = new CNot(bitsarray, totalbits);
+                                c.gates.add(cn);
+                            } else if ("Hadamard".equals(type)) {
+                                int bit = dis.readInt();
+                                int totalbits = dis.readInt();
+                                Hadamard h = new Hadamard(bit, totalbits);
+                                c.gates.add(h);
+                            } else if ("Matrix".equals(type)) {
+                                int bitcount = dis.readInt();
+                                String csv = dis.readUTF();
+                                String[] mtxs = csv.split(":");
+                                MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
+                                c.gates.add(mg);
+                            } else if ("Unknown".equals(type)) {
+                                System.err.println("Read attempt to store a gate that was unknown.");
+                            } else {
+                                System.err.println("Unknown gate type: " + type);
+                            }
+                        }
+                        circuits.add(c);
+                    }
+                    break;
+                }
                 default:
                     break;
             }

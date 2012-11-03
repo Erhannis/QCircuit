@@ -346,7 +346,7 @@ public class QViewport extends javax.swing.JPanel {
                                     public void addClick(double x, double y) {
                                         if (c != null) {
                                             if (g == null) {
-                                                g = new CNot(new int[]{});
+                                                g = new CNot(new int[]{}, c.bits);
                                                 int xIndex = (int)(((x - c.origin.x - c.excessWire) / c.gateSpace) + 1);
                                                 int yIndex = (int)(((y - c.origin.y) / c.wireSpace) + 0.5);
                                                 if (xIndex < 0)
@@ -422,7 +422,7 @@ public class QViewport extends javax.swing.JPanel {
                                     @Override
                                     public void addClick(double x, double y) {
                                         if (c != null) {
-                                            g = new Hadamard(0);
+                                            g = new Hadamard(0, c.bits);
                                             int xIndex = (int) (((x - c.origin.x - c.excessWire) / c.gateSpace) + 1);
                                             int yIndex = (int) (((y - c.origin.y) / c.wireSpace) + 0.5);
                                             if (xIndex < 0) {

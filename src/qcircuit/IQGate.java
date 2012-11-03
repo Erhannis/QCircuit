@@ -16,4 +16,6 @@ public interface IQGate {
     public Color getColor();
     public void setColor(Color color);
     public void setSelected(boolean selected);
+    public ComplexMatrix toMatrix();
+    public ComplexMatrix toInverseMatrix();
 }

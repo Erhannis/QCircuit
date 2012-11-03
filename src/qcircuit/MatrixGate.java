@@ -275,5 +275,17 @@ public class MatrixGate implements IQGate {
         } else {
             this.color = COLOR_UNSELECTED;
         }
-    }    
+    }
+
+    public ComplexMatrix toMatrix() {
+        return this.matrix;
+    }
+
+    /**
+     * This assumes that this matrix is unitary.  Very important.
+     * @return 
+     */
+    public ComplexMatrix toInverseMatrix() {
+        return this.toMatrix().complexTranspose();
+    }
 }

@@ -10,6 +10,8 @@
  */
 package qcircuit;
 
+import java.awt.FlowLayout;
+
 /**
  *
  * @author erhannis
@@ -20,6 +22,7 @@ public class HelpFrame extends javax.swing.JFrame {
     public HelpFrame(String helpText) {
         initComponents();
         labelHelp.setText(helpText);
+        labelHelp.setLayout(new FlowLayout());
     }
 
     /** This method is called from within the constructor to

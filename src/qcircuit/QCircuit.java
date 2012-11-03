@@ -54,4 +54,25 @@ public class QCircuit implements IQCircuit {
     public void init() {
         
     }
+
+    public ComplexMatrix toMatrix() {
+        ComplexMatrix result;
+        if (gates.size() > 0) {
+            result = gates.get(0).toMatrix();
+            for (int i = 1; i < this.gates.size(); i++) {
+                result = this.gates.get(i).toMatrix().times(result);
+            }
+        } else {
+            result = ComplexMatrix.identity(1 << bits);
+        }
+        return result;
+    }
+
+    /**
+     * This assumes the circuit's composite gate matrices are unitary.
+     * @return 
+     */
+    public ComplexMatrix toInverseMatrix() {
+        return this.toMatrix().complexTranspose();
+    }
 }
