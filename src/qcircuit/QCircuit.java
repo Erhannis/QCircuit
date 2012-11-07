@@ -15,6 +15,8 @@ import java.util.ArrayList;
  */
 public class QCircuit implements IQCircuit {
     public int bits = 0;
+    public Color[] wireColorsSelected;
+    public Color[] wireColorsUnselected;
     public ArrayList<IQGate> gates;
     
     public Point.Double origin = new Point.Double(0, 0);
@@ -38,6 +40,12 @@ public class QCircuit implements IQCircuit {
     public QCircuit(int bits) {
         this.bits = bits;
         this.gates = new ArrayList<IQGate>();
+        this.wireColorsSelected = new Color[bits];
+        this.wireColorsUnselected = new Color[bits];
+        for (int i = 0; i < bits; i++) {
+            this.wireColorsSelected[i] = COLOR_SELECTED;
+            this.wireColorsUnselected[i] = COLOR_UNSELECTED;
+        }
         
         init();
     }

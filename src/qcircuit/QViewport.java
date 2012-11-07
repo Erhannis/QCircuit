@@ -173,8 +173,15 @@ public class QViewport extends javax.swing.JPanel {
                             double endy = c.origin.y + (c.wireSpace * j);
                             g.drawString(nf.format(dbits[j]), (float)(endx - (c.gateSize * 0.25)), (float)(endy + (c.gateSize * 0.25)));
                         }
-                    } else if (parent.groupRunMeasureMethod.isSelected(parent.radioMeasure.getModel())) {
+                    } else if (parent.groupRunMeasureMethod.isSelected(parent.radioFakeMeasure.getModel())) {
                         bits = s2.fakeMeasure();
+                        endx = c.origin.x + c.excessWire + (i * c.gateSpace) + c.gateSize;
+                        for (int j = 0; j < c.bits; j++) {
+                            double endy = c.origin.y + (c.wireSpace * j);
+                            g.drawString(Integer.toString(bits[j]), (float)(endx - (c.gateSize * 0.25)), (float)(endy + (c.gateSize * 0.25)));
+                        }
+                    } else if (parent.groupRunMeasureMethod.isSelected(parent.radioTrueMeasure.getModel())) {
+                        bits = s2.trueMeasure();
                         endx = c.origin.x + c.excessWire + (i * c.gateSpace) + c.gateSize;
                         for (int j = 0; j < c.bits; j++) {
                             double endy = c.origin.y + (c.wireSpace * j);
@@ -256,6 +263,9 @@ public class QViewport extends javax.swing.JPanel {
                         if (parent.isTestRun) {
                             parent.radioStateProbe.setSelected(true);
                         }
+                        break;
+                    case KeyEvent.VK_SPACE:
+                        repaintVP();
                         break;
                     default:
                         break;

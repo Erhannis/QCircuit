@@ -162,9 +162,10 @@ public class QCircuitView extends FrameView {
         radioAddHadamard = new javax.swing.JRadioButton();
         radioProbRound = new javax.swing.JRadioButton();
         radioProb = new javax.swing.JRadioButton();
-        radioMeasure = new javax.swing.JRadioButton();
+        radioFakeMeasure = new javax.swing.JRadioButton();
         radioAddMatrixGate = new javax.swing.JRadioButton();
         radioStateProbe = new javax.swing.JRadioButton();
+        radioTrueMeasure = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         panelProperties = new javax.swing.JPanel();
         btnDelete = new javax.swing.JButton();
@@ -182,8 +183,9 @@ public class QCircuitView extends FrameView {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        jSplitPane1.setDividerLocation(400);
+        jSplitPane1.setDividerLocation(450);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         jSplitPane2.setDividerLocation(180);
@@ -256,16 +258,16 @@ public class QCircuitView extends FrameView {
             }
         });
 
-        groupRunMeasureMethod.add(radioMeasure);
-        radioMeasure.setText(resourceMap.getString("radioMeasure.text")); // NOI18N
-        radioMeasure.setName("radioMeasure"); // NOI18N
+        groupRunMeasureMethod.add(radioFakeMeasure);
+        radioFakeMeasure.setText(resourceMap.getString("radioFakeMeasure.text")); // NOI18N
+        radioFakeMeasure.setName("radioFakeMeasure"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioMeasure, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioFakeMeasure, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        radioMeasure.addActionListener(new java.awt.event.ActionListener() {
+        radioFakeMeasure.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioMeasureActionPerformed(evt);
+                radioFakeMeasureActionPerformed(evt);
             }
         });
 
@@ -285,6 +287,19 @@ public class QCircuitView extends FrameView {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioStateProbe, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
+        groupRunMeasureMethod.add(radioTrueMeasure);
+        radioTrueMeasure.setText(resourceMap.getString("radioTrueMeasure.text")); // NOI18N
+        radioTrueMeasure.setName("radioTrueMeasure"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, boxTestRun, org.jdesktop.beansbinding.ELProperty.create("${selected}"), radioTrueMeasure, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        radioTrueMeasure.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioTrueMeasureActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelToolbarLayout = new javax.swing.GroupLayout(panelToolbar);
         panelToolbar.setLayout(panelToolbarLayout);
         panelToolbarLayout.setHorizontalGroup(
@@ -302,7 +317,8 @@ public class QCircuitView extends FrameView {
                         .addGroup(panelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(radioProb)
                             .addComponent(radioProbRound)
-                            .addComponent(radioMeasure)))
+                            .addComponent(radioFakeMeasure)
+                            .addComponent(radioTrueMeasure)))
                     .addComponent(radioSelectCircuit)
                     .addComponent(radioSelectGate)
                     .addComponent(radioToggle)
@@ -328,14 +344,16 @@ public class QCircuitView extends FrameView {
                 .addComponent(radioToggle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioStateProbe)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addComponent(boxTestRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioProbRound)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioProb)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(radioMeasure)
+                .addComponent(radioFakeMeasure)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioTrueMeasure)
                 .addContainerGap())
         );
 
@@ -351,7 +369,7 @@ public class QCircuitView extends FrameView {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 450, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(jPanel3);
@@ -381,7 +399,7 @@ public class QCircuitView extends FrameView {
         panelPropertiesLayout.setVerticalGroup(
             panelPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPropertiesLayout.createSequentialGroup()
-                .addContainerGap(154, Short.MAX_VALUE)
+                .addContainerGap(104, Short.MAX_VALUE)
                 .addComponent(btnDelete)
                 .addContainerGap())
         );
@@ -547,9 +565,9 @@ private void radioProbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     vp.repaintVP();
 }//GEN-LAST:event_radioProbActionPerformed
 
-private void radioMeasureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMeasureActionPerformed
+private void radioFakeMeasureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioFakeMeasureActionPerformed
     vp.repaintVP();
-}//GEN-LAST:event_radioMeasureActionPerformed
+}//GEN-LAST:event_radioFakeMeasureActionPerformed
 
     public HelpFrame helpFrame = null;
 
@@ -578,6 +596,10 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         vp.repaintVP();
     }
 }//GEN-LAST:event_mitemOpenActionPerformed
+
+private void radioTrueMeasureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTrueMeasureActionPerformed
+    vp.repaintVP();
+}//GEN-LAST:event_radioTrueMeasureActionPerformed
 
     public int VERSION = 2;
 
@@ -787,13 +809,14 @@ public void initTestRun() {
     public javax.swing.JRadioButton radioAddCircuit;
     public javax.swing.JRadioButton radioAddHadamard;
     public javax.swing.JRadioButton radioAddMatrixGate;
-    public javax.swing.JRadioButton radioMeasure;
+    public javax.swing.JRadioButton radioFakeMeasure;
     public javax.swing.JRadioButton radioProb;
     public javax.swing.JRadioButton radioProbRound;
     public javax.swing.JRadioButton radioSelectCircuit;
     public javax.swing.JRadioButton radioSelectGate;
     public javax.swing.JRadioButton radioStateProbe;
     public javax.swing.JRadioButton radioToggle;
+    public javax.swing.JRadioButton radioTrueMeasure;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

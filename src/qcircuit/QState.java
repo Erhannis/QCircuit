@@ -118,6 +118,36 @@ public class QState {
         int[] result = new int[bits];
         return result;
     }
+
+    /**
+     * Performs a measurement, and DOES affect the state as
+     * it should. This assumes the probabilities add up to 1.
+     * @return 
+     */
+    public int[] trueMeasure() {
+        double target = QUtils.r.nextDouble();
+        double cur = 0;
+        for (int i = 0; i < states.length; i++) {
+            cur += states[i].normsqr();
+            if (cur > target) {
+                initZeros();
+                states[0].real = 0;
+                states[i].real = 1;
+                int[] result = new int[bits];
+                for (int j = 0; j < bits; j++) {
+                    if ((i & 1) > 0) {
+                        result[j] = 1;
+                    } else {
+                        result[j] = 0;
+                    }
+                    i = i >> 1;
+                }
+                return result;
+            }
+        }
+        int[] result = new int[bits];
+        return result;
+    }
     
     public QState copy() {
         QState result = new QState(this.bits);

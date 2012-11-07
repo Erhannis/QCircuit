@@ -22,8 +22,9 @@
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="jSplitPane1">
           <Properties>
-            <Property name="dividerLocation" type="int" value="400"/>
+            <Property name="dividerLocation" type="int" value="450"/>
             <Property name="orientation" type="int" value="0"/>
+            <Property name="resizeWeight" type="double" value="1.0"/>
             <Property name="name" type="java.lang.String" value="jSplitPane1" noResource="true"/>
           </Properties>
 
@@ -73,7 +74,8 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="radioProb" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="radioProbRound" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="radioMeasure" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="radioFakeMeasure" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="radioTrueMeasure" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Component id="radioSelectCircuit" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -104,14 +106,16 @@
                               <Component id="radioToggle" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioStateProbe" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="24" max="32767" attributes="0"/>
+                              <EmptySpace pref="44" max="32767" attributes="0"/>
                               <Component id="boxTestRun" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioProbRound" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioProb" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="radioMeasure" min="-2" max="-2" attributes="0"/>
+                              <Component id="radioFakeMeasure" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioTrueMeasure" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -240,19 +244,19 @@
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                       </AuxValues>
                     </Component>
-                    <Component class="javax.swing.JRadioButton" name="radioMeasure">
+                    <Component class="javax.swing.JRadioButton" name="radioFakeMeasure">
                       <Properties>
                         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                           <ComponentRef name="groupRunMeasureMethod"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" resourceKey="radioMeasure.text"/>
-                        <Property name="name" type="java.lang.String" value="radioMeasure" noResource="true"/>
+                        <Property name="text" type="java.lang.String" resourceKey="radioFakeMeasure.text"/>
+                        <Property name="name" type="java.lang.String" value="radioFakeMeasure" noResource="true"/>
                       </Properties>
                       <BindingProperties>
-                        <BindingProperty name="enabled" source="boxTestRun" sourcePath="${selected}" target="radioMeasure" targetPath="enabled" updateStrategy="0" immediately="false"/>
+                        <BindingProperty name="enabled" source="boxTestRun" sourcePath="${selected}" target="radioFakeMeasure" targetPath="enabled" updateStrategy="0" immediately="false"/>
                       </BindingProperties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioMeasureActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioFakeMeasureActionPerformed"/>
                       </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -288,6 +292,24 @@
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                       </AuxValues>
                     </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioTrueMeasure">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupRunMeasureMethod"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="radioTrueMeasure.text"/>
+                        <Property name="name" type="java.lang.String" value="radioTrueMeasure" noResource="true"/>
+                      </Properties>
+                      <BindingProperties>
+                        <BindingProperty name="enabled" source="boxTestRun" sourcePath="${selected}" target="radioTrueMeasure" targetPath="enabled" updateStrategy="0" immediately="false"/>
+                      </BindingProperties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioTrueMeasureActionPerformed"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel3">
@@ -308,7 +330,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="400" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="450" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -343,7 +365,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="154" max="32767" attributes="0"/>
+                          <EmptySpace pref="104" max="32767" attributes="0"/>
                           <Component id="btnDelete" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>

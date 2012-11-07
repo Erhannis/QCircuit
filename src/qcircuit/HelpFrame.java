@@ -10,19 +10,92 @@
  */
 package qcircuit;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.ScrollPaneLayout;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author erhannis
  */
 public class HelpFrame extends javax.swing.JFrame {
-
+    
+    public int labelHeight = 0;
+    
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (labelHeight != labelHelp.getHeight()) {
+            labelHeight = labelHelp.getHeight();
+            jPanel1.setPreferredSize(new Dimension(400, labelHeight + 100));
+        }
+    }
+    
     /** Creates new form HelpFrame */
     public HelpFrame(String helpText) {
+//        ArrayList<Method> methods = new ArrayList<Method>();
+//        Class c = HelpFrame.class;
+//        while (c != null) {
+//            Method[] bucket = c.getDeclaredMethods();
+//            for (int i = 0; i < bucket.length; i++) {
+//                methods.add(bucket[i]);
+//            }
+//            Class d = c.getSuperclass();
+//            if (d == null || d == c) {
+//                break;
+//            }
+//            c = d;
+//        }
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < methods.size(); i++) {
+//            sb.append(i + ":" + methods.get(i).getName() + ", ");
+//        }
+//        System.out.println(sb.toString());
         initComponents();
         labelHelp.setText(helpText);
-        labelHelp.setLayout(new FlowLayout());
+        //labelHelp.setLayout(new FlowLayout());
+        //Dimension d = new Dimension(400, 500);
+        //jPanel1.setMaximumSize(d);
+        jPanel1.setPreferredSize(new Dimension(400, 1000));
+        jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        //((ScrollPaneLayout)jScrollPane1.getLayout()).
+        
+        jPanel1.addComponentListener(new ComponentListener() {
+
+            public void componentResized(ComponentEvent e) {
+                //System.out.println(labelHelp.getSize().height);
+                jPanel1.setPreferredSize(new Dimension(400, labelHelp.getSize().height + 100));
+                //Aaaugh, this is a pain.  Why can't it layout BEFORE here?
+//                SwingUtilities.invokeLater(new Runnable() {
+//                    public void run() {
+//                        jPanel1.setPreferredSize(new Dimension(400, labelHelp.getSize().height + 100));   
+//                    }
+//                });
+            }
+
+            public void componentMoved(ComponentEvent e) {
+                
+            }
+
+            public void componentShown(ComponentEvent e) {
+                
+            }
+
+            public void componentHidden(ComponentEvent e) {
+                
+            }
+            
+        });
     }
 
     /** This method is called from within the constructor to
