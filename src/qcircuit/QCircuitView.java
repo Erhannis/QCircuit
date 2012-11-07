@@ -35,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 
 /**
  * The application's main frame.
@@ -76,13 +77,18 @@ public class QCircuitView extends FrameView {
     }    
     
     public ResourceMap resourceMap;
+    public PanelPropertiesBox propertiesBox;
     
     public QCircuitView(SingleFrameApplication app) {
         super(app);
         initComponents();
-        
+                
         this.vp = new QViewport(this);
         this.jSplitPane2.setRightComponent(vp);
+        
+        propertiesBox = new PanelPropertiesBox(this);
+        propertiesBox.setBorder(new EtchedBorder());
+        this.jSplitPane1.setBottomComponent(propertiesBox);
         
         init();
         
@@ -167,8 +173,6 @@ public class QCircuitView extends FrameView {
         radioStateProbe = new javax.swing.JRadioButton();
         radioTrueMeasure = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
-        panelProperties = new javax.swing.JPanel();
-        btnDelete = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         mitemNew = new javax.swing.JMenuItem();
@@ -365,7 +369,7 @@ public class QCircuitView extends FrameView {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 649, Short.MAX_VALUE)
+            .addGap(0, 672, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -376,45 +380,15 @@ public class QCircuitView extends FrameView {
 
         jSplitPane1.setTopComponent(jSplitPane2);
 
-        panelProperties.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelProperties.setName("panelProperties"); // NOI18N
-
-        btnDelete.setText(resourceMap.getString("btnDelete.text")); // NOI18N
-        btnDelete.setName("btnDelete"); // NOI18N
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelPropertiesLayout = new javax.swing.GroupLayout(panelProperties);
-        panelProperties.setLayout(panelPropertiesLayout);
-        panelPropertiesLayout.setHorizontalGroup(
-            panelPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPropertiesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnDelete)
-                .addContainerGap(759, Short.MAX_VALUE))
-        );
-        panelPropertiesLayout.setVerticalGroup(
-            panelPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPropertiesLayout.createSequentialGroup()
-                .addContainerGap(104, Short.MAX_VALUE)
-                .addComponent(btnDelete)
-                .addContainerGap())
-        );
-
-        jSplitPane1.setRightComponent(panelProperties);
-
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 835, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -470,7 +444,13 @@ public class QCircuitView extends FrameView {
         helpMenu.add(mitemHelp);
 
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
+        aboutMenuItem.setText(resourceMap.getString("aboutMenuItem.text")); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -494,8 +474,25 @@ private void boxTestRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     vp.repaintVP();
 }//GEN-LAST:event_boxTestRunActionPerformed
 
-public void deleteSelected() {
-    if (groupTools.isSelected(radioSelectCircuit.getModel())) {
+    public void deleteSelectedGate() {
+        if (vp.selectedCircuit != null && vp.selectedGate != null) {
+            int index = vp.selectedCircuit.gates.indexOf(vp.selectedGate);
+            if (index == -1) {
+                vp.selectedCircuit = null;
+                propertiesBox.onSelectedCircuitChanged();
+                vp.selectedGate = null;
+                propertiesBox.onSelectedGateChanged();
+                vp.repaintVP();
+                return;
+            }
+            vp.selectedCircuit.gates.remove(index);
+            vp.selectedGate = null;
+            propertiesBox.onSelectedGateChanged();
+            vp.repaintVP();
+        }
+    }
+
+    public void deleteSelectedCircuit() {
         if (vp.selectedCircuit != null) {
             int index = circuits.indexOf(vp.selectedCircuit);
             if (index == -1) {
@@ -504,7 +501,9 @@ public void deleteSelected() {
                     vp.selectedGate.setSelected(false);
                 }
                 vp.selectedCircuit = null;
+                propertiesBox.onSelectedCircuitChanged();
                 vp.selectedGate = null;
+                propertiesBox.onSelectedGateChanged();
                 vp.repaintVP();
                 return;
             }
@@ -513,35 +512,30 @@ public void deleteSelected() {
                 states.remove(index);
             }
             vp.selectedCircuit = null;
+            propertiesBox.onSelectedCircuitChanged();
             vp.selectedGate = null;
+            propertiesBox.onSelectedGateChanged();
             vp.repaintVP();
         }
+    }
+
+public void deleteSelected() {
+    if (groupTools.isSelected(radioSelectCircuit.getModel())) {
+        deleteSelectedCircuit();
     } else if (groupTools.isSelected(radioSelectGate.getModel())) {
-        if (vp.selectedCircuit != null && vp.selectedGate != null) {
-            int index = vp.selectedCircuit.gates.indexOf(vp.selectedGate);
-            if (index == -1) {
-                vp.selectedCircuit = null;
-                vp.selectedGate = null;
-                vp.repaintVP();
-                return;
-            }
-            vp.selectedCircuit.gates.remove(index);
-            vp.selectedGate = null;            
-            vp.repaintVP();
-        }
+        deleteSelectedGate();
     } else {
         
     }
 }
 
-private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-    deleteSelected();
-}//GEN-LAST:event_btnDeleteActionPerformed
-
     public ComplexMatrix currentGateMatrix = null;
     public int matrixBits = -1;
+    public IQGate currentLoadedGate = null;
+    public QCircuit currentLoadedCircuit = null;
 
 private void radioAddMatrixGateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioAddMatrixGateActionPerformed
+    currentLoadedGate = null;
     String input = JOptionPane.showInputDialog("Please input the matrix in the form of either\none list of 2^(2n) real numbers, separated by semicolons, or\ntwo such lists (real and complex coefficients), separated from each other by a colon.", null);
     String[] strings = input.split(":");
     if (strings.length == 1) {
@@ -580,6 +574,12 @@ private void mitemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
 private void mitemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemNewActionPerformed
     circuits = new ArrayList<QCircuit>();
+    states = null;
+    vp.selectedCircuit = null;
+    propertiesBox.onSelectedCircuitChanged();
+    vp.selectedGate = null;
+    propertiesBox.onSelectedGateChanged();
+    vp.repaintVP();
 }//GEN-LAST:event_mitemNewActionPerformed
 
     public JFileChooser chooser = new JFileChooser();
@@ -600,6 +600,10 @@ private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 private void radioTrueMeasureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTrueMeasureActionPerformed
     vp.repaintVP();
 }//GEN-LAST:event_radioTrueMeasureActionPerformed
+
+private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+    this.showAboutBox();
+}//GEN-LAST:event_aboutMenuItemActionPerformed
 
     public int VERSION = 2;
 
@@ -659,6 +663,98 @@ private void radioTrueMeasureActionPerformed(java.awt.event.ActionEvent evt) {//
         }
     }
 
+    public void saveCircuit(QCircuit c, File file) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            DataOutputStream dos = new DataOutputStream(fos);
+            dos.writeInt(VERSION);
+            dos.writeUTF("QCircuitUnit");
+            dos.writeInt(c.bits);
+            dos.writeDouble(c.origin.x);
+            dos.writeDouble(c.origin.y);
+            dos.writeDouble(c.excessWire);
+            dos.writeDouble(c.gateSize);
+            dos.writeDouble(c.gateSpace);
+            dos.writeDouble(c.scale);
+            dos.writeDouble(c.wireSpace);
+            dos.writeInt(c.gates.size());
+            for (int j = 0; j < c.gates.size(); j++) {
+                IQGate ig = c.gates.get(j);
+                if (ig instanceof CNot) {
+                    dos.writeUTF("CNot");
+                    dos.writeInt(((CNot) ig).bits.length);
+                    for (int k = 0; k < ((CNot) ig).bits.length; k++) {
+                        dos.writeInt(((CNot) ig).bits[k]);
+                    }
+                    dos.writeInt(((CNot) ig).bitcount);
+                } else if (ig instanceof Hadamard) {
+                    dos.writeUTF("Hadamard");
+                    dos.writeInt(((Hadamard) ig).bit);
+                    dos.writeInt(((Hadamard) ig).bitcount);
+                } else if (ig instanceof MatrixGate) {
+                    dos.writeUTF("Matrix");
+                    dos.writeInt(((MatrixGate) ig).bits);
+                    dos.writeUTF(((MatrixGate) ig).matrix.toSquareExportString());
+                } else {
+                    dos.writeUTF("Unknown");
+                }
+            }
+            dos.flush();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fos.flush();
+                fos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void saveGate(IQGate ig, File file) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            DataOutputStream dos = new DataOutputStream(fos);
+            dos.writeInt(VERSION);
+            dos.writeUTF("QCircuitGate");
+            if (ig instanceof CNot) {
+                dos.writeUTF("CNot");
+                dos.writeInt(((CNot) ig).bits.length);
+                for (int k = 0; k < ((CNot) ig).bits.length; k++) {
+                    dos.writeInt(((CNot) ig).bits[k]);
+                }
+                dos.writeInt(((CNot) ig).bitcount);
+            } else if (ig instanceof Hadamard) {
+                dos.writeUTF("Hadamard");
+                dos.writeInt(((Hadamard) ig).bit);
+                dos.writeInt(((Hadamard) ig).bitcount);
+            } else if (ig instanceof MatrixGate) {
+                dos.writeUTF("Matrix");
+                dos.writeInt(((MatrixGate) ig).bits);
+                dos.writeUTF(((MatrixGate) ig).matrix.toSquareExportString());
+            } else {
+                dos.writeUTF("Unknown");
+            }
+            dos.flush();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fos.flush();
+                fos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     public void loadAll(File file) {
         FileInputStream fis = null;
         try {
@@ -715,12 +811,52 @@ private void radioTrueMeasureActionPerformed(java.awt.event.ActionEvent evt) {//
                 case 2:
                 {
                     String fileType = dis.readUTF();
-                    if (!"QCircuitSet".equals(fileType)) {
-                        throw new IllegalArgumentException("File is not a QCircuitSet file!  Instead: " + fileType);
-                    }
-                    int circuitsSize = dis.readInt();
-                    circuits = new ArrayList<QCircuit>();
-                    for (int i = 0; i < circuitsSize; i++) {
+                    if ("QCircuitSet".equals(fileType)) {
+                        int circuitsSize = dis.readInt();
+                        circuits = new ArrayList<QCircuit>();
+                        for (int i = 0; i < circuitsSize; i++) {
+                            int bits = dis.readInt();
+                            double cox = dis.readDouble();
+                            double coy = dis.readDouble();
+                            QCircuit c = new QCircuit(bits, cox, coy);
+                            c.excessWire = dis.readDouble();
+                            c.gateSize = dis.readDouble();
+                            c.gateSpace = dis.readDouble();
+                            c.scale = dis.readDouble();
+                            c.wireSpace = dis.readDouble();
+                            int gateCount = dis.readInt();
+                            c.gates = new ArrayList<IQGate>();
+                            for (int j = 0; j < gateCount; j++) {
+                                String type = dis.readUTF();
+                                if ("CNot".equals(type)) {
+                                    int bitcount = dis.readInt();
+                                    int[] bitsarray = new int[bitcount];
+                                    for (int k = 0; k < bitcount; k++) {
+                                        bitsarray[k] = dis.readInt();
+                                    }
+                                    int totalbits = dis.readInt();
+                                    CNot cn = new CNot(bitsarray, totalbits);
+                                    c.gates.add(cn);
+                                } else if ("Hadamard".equals(type)) {
+                                    int bit = dis.readInt();
+                                    int totalbits = dis.readInt();
+                                    Hadamard h = new Hadamard(bit, totalbits);
+                                    c.gates.add(h);
+                                } else if ("Matrix".equals(type)) {
+                                    int bitcount = dis.readInt();
+                                    String csv = dis.readUTF();
+                                    String[] mtxs = csv.split(":");
+                                    MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
+                                    c.gates.add(mg);
+                                } else if ("Unknown".equals(type)) {
+                                    System.err.println("Read attempt to store a gate that was unknown.");
+                                } else {
+                                    System.err.println("Unknown gate type: " + type);
+                                }
+                            }
+                            circuits.add(c);
+                        }
+                    } else if ("QCircuitUnit".equals(fileType)) {
                         int bits = dis.readInt();
                         double cox = dis.readDouble();
                         double coy = dis.readDouble();
@@ -760,7 +896,38 @@ private void radioTrueMeasureActionPerformed(java.awt.event.ActionEvent evt) {//
                                 System.err.println("Unknown gate type: " + type);
                             }
                         }
-                        circuits.add(c);
+                        currentLoadedCircuit = c;
+                    } else if ("QCircuitGate".equals(fileType)) {
+                        String type = dis.readUTF();
+                        if ("CNot".equals(type)) {
+                            int bitcount = dis.readInt();
+                            int[] bitsarray = new int[bitcount];
+                            for (int k = 0; k < bitcount; k++) {
+                                bitsarray[k] = dis.readInt();
+                            }
+                            int totalbits = dis.readInt();
+                            CNot cn = new CNot(bitsarray, totalbits);
+                            currentLoadedGate = cn;
+                        } else if ("Hadamard".equals(type)) {
+                            int bit = dis.readInt();
+                            int totalbits = dis.readInt();
+                            Hadamard h = new Hadamard(bit, totalbits);
+                            currentLoadedGate = h;
+                        } else if ("Matrix".equals(type)) {
+                            int bitcount = dis.readInt();
+                            String csv = dis.readUTF();
+                            String[] mtxs = csv.split(":");
+                            MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
+                            currentLoadedGate = mg;
+                        } else if ("Unknown".equals(type)) {
+                            System.err.println("Read attempt to store a gate that was unknown.");
+                            currentLoadedGate = null;
+                        } else {
+                            System.err.println("Unknown gate type: " + type);
+                            currentLoadedGate = null;
+                        }
+                    } else {
+                        throw new IllegalArgumentException("File is not a QCircuitSet/Unit/Gate file!  Instead: " + fileType);
                     }
                     break;
                 }
@@ -791,7 +958,6 @@ public void initTestRun() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox boxTestRun;
-    public javax.swing.JButton btnDelete;
     public javax.swing.ButtonGroup groupRunMeasureMethod;
     public javax.swing.ButtonGroup groupTools;
     private javax.swing.JPanel jPanel3;
@@ -803,7 +969,6 @@ public void initTestRun() {
     private javax.swing.JMenuItem mitemNew;
     private javax.swing.JMenuItem mitemOpen;
     private javax.swing.JMenuItem mitemSaveAs;
-    private javax.swing.JPanel panelProperties;
     private javax.swing.JPanel panelToolbar;
     public javax.swing.JRadioButton radioAddCNot;
     public javax.swing.JRadioButton radioAddCircuit;

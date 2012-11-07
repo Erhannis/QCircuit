@@ -78,7 +78,40 @@ public class Complex {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(nf.format(real));
-        if (imag >= 0)
+        if (Math.copySign(1, imag) >= 0)
+            sb.append("+");
+        sb.append(nf.format(imag) + "i");
+        return sb.toString();
+    }
+
+    public String toString(NumberFormat nf) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(nf.format(real));
+        if (Math.copySign(1, imag) >= 0)
+            sb.append("+");
+        sb.append(nf.format(imag) + "i");
+        return sb.toString();
+    }
+
+    public String toStringWSigns(NumberFormat nf) {
+        StringBuilder sb = new StringBuilder();
+        if (Math.copySign(1, real) >= 0) {
+            sb.append("+");
+        }
+        sb.append(nf.format(real));
+        if (Math.copySign(1, imag) >= 0)
+            sb.append("+");
+        sb.append(nf.format(imag) + "i");
+        return sb.toString();
+    }
+
+    public String toStringWPad(NumberFormat nf) {
+        StringBuilder sb = new StringBuilder();
+        if (Math.copySign(1, real) >= 0) {
+            sb.append(" ");
+        }
+        sb.append(nf.format(real));
+        if (Math.copySign(1, imag) >= 0)
             sb.append("+");
         sb.append(nf.format(imag) + "i");
         return sb.toString();

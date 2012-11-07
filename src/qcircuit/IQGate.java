@@ -18,4 +18,6 @@ public interface IQGate {
     public void setSelected(boolean selected);
     public ComplexMatrix toMatrix();
     public ComplexMatrix toInverseMatrix();
+    public IQGate toInverseGate();
+    public IQGate copy();
 }

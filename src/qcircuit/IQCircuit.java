@@ -11,4 +11,5 @@ package qcircuit;
 public interface IQCircuit {
     public ComplexMatrix toMatrix();
     public ComplexMatrix toInverseMatrix();
+    public IQCircuit toInverseCircuit();
 }

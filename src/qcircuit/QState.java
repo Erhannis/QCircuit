@@ -167,7 +167,7 @@ public class QState {
             sb.append("(" + states[0].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(0), bits) + ">");
         }
         for (int i = 1; i < states.length; i++) {
-            sb.append("+(" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
+            sb.append(" + (" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
         }
         return sb.toString();
     }

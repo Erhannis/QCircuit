@@ -288,4 +288,16 @@ public class MatrixGate implements IQGate {
     public ComplexMatrix toInverseMatrix() {
         return this.toMatrix().complexTranspose();
     }
+
+    public IQGate toInverseGate() {
+        return new MatrixGate(this.matrix.complexTranspose());
+    }
+
+    /**
+     * This passes the original matrix.
+     * @return 
+     */
+    public IQGate copy() {
+        return new MatrixGate(this.matrix);
+    }
 }

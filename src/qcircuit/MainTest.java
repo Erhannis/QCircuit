@@ -17,6 +17,16 @@ public class MainTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        double d = 0*-1;
+        System.out.println(d);
+        System.out.println(d < 0);
+        System.out.println(Double.valueOf("-0"));
+        d = Double.valueOf("-0");
+        System.out.println(d);
+        System.out.println(d < 0);
+        System.out.println(Math.copySign(1, d));
+        if (1==1) return;
+        
         Hadamard h1 = new Hadamard(0, 4);
         Hadamard h2 = new Hadamard(1, 4);
         Hadamard h3 = new Hadamard(2, 4);

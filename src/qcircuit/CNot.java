@@ -209,4 +209,12 @@ public class CNot implements IQGate {
     public ComplexMatrix toInverseMatrix() {
         return this.toMatrix();
     }
+
+    public IQGate toInverseGate() {
+        return this.copy();
+    }
+
+    public IQGate copy() {
+        return new CNot(this.bits.clone(), this.bitcount);
+    }
 }

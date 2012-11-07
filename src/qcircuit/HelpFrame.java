@@ -10,9 +10,13 @@
  */
 package qcircuit;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
@@ -20,8 +24,12 @@ import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ScrollPaneLayout;
+import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
 
 /**
@@ -31,13 +39,50 @@ import javax.swing.SwingUtilities;
 public class HelpFrame extends javax.swing.JFrame {
     
     public int labelHeight = 0;
+    public JLabel labelHelp;
+    public ScrollPaneWidthTrackingPanel jPanel1;
     
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         if (labelHeight != labelHelp.getHeight()) {
             labelHeight = labelHelp.getHeight();
-            jPanel1.setPreferredSize(new Dimension(400, labelHeight + 100));
+            //jPanel1.setPreferredSize(new Dimension(400, labelHeight + 100));
+        }
+    }
+    
+    public class ScrollPaneWidthTrackingPanel extends JPanel implements Scrollable {
+
+        private static final long serialVersionUID = 1L;
+        public Component component;
+
+        public ScrollPaneWidthTrackingPanel(LayoutManager layoutManager, Component component) {
+            super(layoutManager);
+            this.component = component;
+        }
+
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return Math.max(visibleRect.height * 9 / 10, 1);
+        }
+
+        public boolean getScrollableTracksViewportHeight() {
+            if (getParent() instanceof JViewport) {
+                JViewport viewport = (JViewport) getParent();
+                return component.getPreferredSize().height < viewport.getHeight();
+            }
+            return false;
+        }
+
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
+
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return Math.max(visibleRect.height / 10, 1);
         }
     }
     
@@ -62,19 +107,28 @@ public class HelpFrame extends javax.swing.JFrame {
 //        }
 //        System.out.println(sb.toString());
         initComponents();
+        
+//        jLabel1.getText();
+        labelHelp = new JLabel();
+        labelHelp.setVerticalAlignment(JLabel.TOP);
+        jPanel1 = new ScrollPaneWidthTrackingPanel(new GridLayout(0, 1), labelHelp);
+        jPanel1.add(labelHelp);
+        jScrollPane1.setViewportView(jPanel1);
+        //labelHelp.setSize(new Dimension(100,25));
+        //this.validate();
         labelHelp.setText(helpText);
         //labelHelp.setLayout(new FlowLayout());
         //Dimension d = new Dimension(400, 500);
         //jPanel1.setMaximumSize(d);
-        jPanel1.setPreferredSize(new Dimension(400, 1000));
-        jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        //jPanel1.setPreferredSize(new Dimension(400, 1000));
+        //jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         //((ScrollPaneLayout)jScrollPane1.getLayout()).
         
         jPanel1.addComponentListener(new ComponentListener() {
 
             public void componentResized(ComponentEvent e) {
                 //System.out.println(labelHelp.getSize().height);
-                jPanel1.setPreferredSize(new Dimension(400, labelHelp.getSize().height + 100));
+                //jPanel1.setPreferredSize(new Dimension(400, labelHelp.getSize().height + 100));
                 //Aaaugh, this is a pain.  Why can't it layout BEFORE here?
 //                SwingUtilities.invokeLater(new Runnable() {
 //                    public void run() {
@@ -106,11 +160,8 @@ public class HelpFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        labelHelp = new javax.swing.JLabel();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(qcircuit.QCircuitApp.class).getContext().getResourceMap(HelpFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
@@ -118,49 +169,19 @@ public class HelpFrame extends javax.swing.JFrame {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jPanel1.setName("jPanel1"); // NOI18N
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bounds.size}"), jPanel1, org.jdesktop.beansbinding.BeanProperty.create("maximumSize"));
-        bindingGroup.addBinding(binding);
-
-        labelHelp.setText(resourceMap.getString("labelHelp.text")); // NOI18N
-        labelHelp.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        labelHelp.setName("labelHelp"); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelHelp)
-                .addContainerGap(302, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelHelp)
-                .addContainerGap(268, Short.MAX_VALUE))
-        );
-
-        jScrollPane1.setViewportView(jPanel1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
 
-        bindingGroup.bind();
-
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-410)/2, (screenSize.height-330)/2, 410, 330);
+        setBounds((screenSize.width-720)/2, (screenSize.height-584)/2, 720, 584);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -199,9 +220,6 @@ public class HelpFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel labelHelp;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

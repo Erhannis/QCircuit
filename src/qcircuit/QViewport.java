@@ -323,10 +323,21 @@ public class QViewport extends javax.swing.JPanel {
                                         if (selectedGate != null) {
                                             selectedGate.setSelected(false);
                                             selectedGate = null;
+                                            parent.propertiesBox.onSelectedGateChanged();
                                         }
                                         if (selectedCircuit != null) {
                                             selectedCircuit.color = QCircuit.COLOR_UNSELECTED;
                                             selectedCircuit = null;
+                                            parent.propertiesBox.onSelectedCircuitChanged();
+                                        }
+                                        if (parent.currentLoadedCircuit != null) {
+                                            parent.currentLoadedCircuit.origin.x = clickX;
+                                            parent.currentLoadedCircuit.origin.y = clickY;
+                                            parent.circuits.add(parent.currentLoadedCircuit);
+                                            parent.currentLoadedCircuit = null;
+                                            ctrlEvent = null;
+                                            repaintVP();
+                                            return;
                                         }
                                         newCircuit = new QCircuit(1, clickX, clickY);
                                         newCircuit.switchRunMode(parent.isTestRun);
@@ -364,8 +375,10 @@ public class QViewport extends javax.swing.JPanel {
                                         if (selectedGate != null) {
                                             selectedGate.setSelected(false);
                                             selectedGate = null;
+                                            parent.propertiesBox.onSelectedGateChanged();
                                         }
                                         selectedCircuit = null;
+                                        parent.propertiesBox.onSelectedCircuitChanged();
                                         for (QCircuit c : parent.circuits) {
                                             c.color = QCircuit.COLOR_UNSELECTED;
                                         }
@@ -441,8 +454,10 @@ public class QViewport extends javax.swing.JPanel {
                                         if (selectedGate != null) {
                                             selectedGate.setSelected(false);
                                             selectedGate = null;
+                                            parent.propertiesBox.onSelectedGateChanged();
                                         }
                                         selectedCircuit = null;
+                                        parent.propertiesBox.onSelectedCircuitChanged();
                                         for (QCircuit c : parent.circuits) {
                                             c.color = QCircuit.COLOR_UNSELECTED;
                                         }
@@ -504,8 +519,10 @@ public class QViewport extends javax.swing.JPanel {
                                         if (selectedGate != null) {
                                             selectedGate.setSelected(false);
                                             selectedGate = null;
+                                            parent.propertiesBox.onSelectedGateChanged();
                                         }
                                         selectedCircuit = null;
+                                        parent.propertiesBox.onSelectedCircuitChanged();
                                         for (QCircuit c : parent.circuits) {
                                             c.color = QCircuit.COLOR_UNSELECTED;
                                         }
@@ -527,16 +544,28 @@ public class QViewport extends javax.swing.JPanel {
 
                                     @Override
                                     public void addClick(double x, double y) {
-                                        if (c != null && parent.currentGateMatrix != null) {
-                                            g = new MatrixGate(parent.currentGateMatrix, parent.matrixBits);
-                                            int xIndex = (int) (((x - c.origin.x - c.excessWire) / c.gateSpace) + 1);
-                                            if (xIndex < 0) {
-                                                xIndex = 0;
-                                            } else if (xIndex > c.gates.size()) {
-                                                xIndex = c.gates.size();
+                                        if (c != null) {
+                                            if (parent.currentLoadedGate != null) {
+                                                IQGate qg = parent.currentLoadedGate.copy();
+                                                int xIndex = (int) (((x - c.origin.x - c.excessWire) / c.gateSpace) + 1);
+                                                if (xIndex < 0) {
+                                                    xIndex = 0;
+                                                } else if (xIndex > c.gates.size()) {
+                                                    xIndex = c.gates.size();
+                                                }
+                                                c.gates.add(xIndex, qg);
+                                                repaintVP();
+                                            } else if (parent.currentGateMatrix != null) {
+                                                g = new MatrixGate(parent.currentGateMatrix, parent.matrixBits);
+                                                int xIndex = (int) (((x - c.origin.x - c.excessWire) / c.gateSpace) + 1);
+                                                if (xIndex < 0) {
+                                                    xIndex = 0;
+                                                } else if (xIndex > c.gates.size()) {
+                                                    xIndex = c.gates.size();
+                                                }
+                                                c.gates.add(xIndex, g);
+                                                repaintVP();
                                             }
-                                            c.gates.add(xIndex, g);
-                                            repaintVP();
                                         } else {
                                             //System.out.println("c is null!");
                                         }
@@ -553,6 +582,8 @@ public class QViewport extends javax.swing.JPanel {
                             } else if (parent.groupTools.isSelected(parent.radioToggle.getModel())) {
                             } else if (parent.groupTools.isSelected(parent.radioSelectCircuit.getModel())) {
                             } else if (parent.groupTools.isSelected(parent.radioSelectGate.getModel())) {
+                            } else if (parent.groupTools.isSelected(parent.radioStateProbe.getModel())) {
+                                //TODO Maybe have ctrl select circuit first, otherwise go straight?
                             } else {
                             }
                         } else {
@@ -583,10 +614,12 @@ public class QViewport extends javax.swing.JPanel {
                             if (selectedCircuit != null) {
                                 selectedCircuit.color = QCircuit.COLOR_UNSELECTED;
                                 selectedCircuit = null;
+                                parent.propertiesBox.onSelectedCircuitChanged();
                             }
                             if (selectedGate != null) {
                                 selectedGate.setSelected(false);
                                 selectedGate = null;
+                                parent.propertiesBox.onSelectedGateChanged();
                             }
                             for (QCircuit c : parent.circuits) {
                                 if (c.origin.x <= clickX
@@ -594,6 +627,8 @@ public class QViewport extends javax.swing.JPanel {
                                         && c.origin.x + (c.excessWire * 2) + (c.gateSpace * c.gates.size()) >= clickX
                                         && c.origin.y + (c.wireSpace * (c.bits - 1)) + (c.gateSize * 0.5) >= clickY) {
                                     selectedCircuit = c;
+                                    parent.propertiesBox.onSelectedCircuitChanged();
+                                    parent.propertiesBox.showCircuit(selectedCircuit);
                                     c.color = QCircuit.COLOR_SELECTED;
                                     break;
                                 }
@@ -603,6 +638,7 @@ public class QViewport extends javax.swing.JPanel {
                             if (selectedGate != null) {
                                 selectedGate.setSelected(false);
                                 selectedGate = null;
+                                parent.propertiesBox.onSelectedGateChanged();
                             }
                             if (selectedCircuit != null) {
                                 int xIndex = (int)(((clickX - selectedCircuit.origin.x - selectedCircuit.excessWire) / selectedCircuit.gateSpace) + 0.5);
@@ -619,6 +655,59 @@ public class QViewport extends javax.swing.JPanel {
 //                                }
                                 selectedCircuit.gates.get(xIndex).setSelected(true);
                                 selectedGate = selectedCircuit.gates.get(xIndex);
+                                parent.propertiesBox.onSelectedGateChanged();
+                                parent.propertiesBox.showGate(selectedGate);
+                            }
+                            repaintVP();
+                        } else if (parent.groupTools.isSelected(parent.radioStateProbe.getModel())) {
+                            if (selectedCircuit != null) {
+                                selectedCircuit.color = QCircuit.COLOR_UNSELECTED;
+                                selectedCircuit = null;
+                                parent.propertiesBox.onSelectedCircuitChanged();
+                            }
+                            if (selectedGate != null) {
+                                selectedGate.setSelected(false);
+                                selectedGate = null;
+                                parent.propertiesBox.onSelectedGateChanged();
+                            }
+                            for (QCircuit c : parent.circuits) {
+                                if (c.origin.x <= clickX
+                                        && c.origin.y - (c.gateSize * 0.5) <= clickY
+                                        && c.origin.x + (c.excessWire * 2) + (c.gateSpace * c.gates.size()) >= clickX
+                                        && c.origin.y + (c.wireSpace * (c.bits - 1)) + (c.gateSize * 0.5) >= clickY) {
+                                    selectedCircuit = c;
+                                    parent.propertiesBox.onSelectedCircuitChanged();
+                                    c.color = QCircuit.COLOR_SELECTED;
+                                    break;
+                                }
+                            }
+                            if (selectedCircuit != null) {
+                                int xIndex = ((int)(((clickX - selectedCircuit.origin.x - selectedCircuit.excessWire) / selectedCircuit.gateSpace) + 1)) - 1;
+//                                int yIndex = (int)(((clickY - selectedCircuit.origin.y) / selectedCircuit.wireSpace) + 0.5);
+                                if (xIndex < 0) {
+                                    xIndex = -1;
+                                } else if(xIndex >= selectedCircuit.gates.size()) {
+                                    xIndex = selectedCircuit.gates.size() - 1;
+                                }
+//                                if (yIndex < 0) {
+//                                    yIndex = 0;
+//                                } else if (yIndex >= selectedCircuit.bits) {
+//                                    yIndex = selectedCircuit.bits - 1;
+//                                }
+                                if (xIndex > -1) {
+                                    selectedCircuit.gates.get(xIndex).setSelected(true);
+                                    selectedGate = selectedCircuit.gates.get(xIndex);
+                                    parent.propertiesBox.onSelectedGateChanged();
+                                }
+                                
+                                QCircuit c = selectedCircuit;
+                                QState s = parent.states.get(parent.circuits.indexOf(c));
+                                QState s2 = s.copy();
+                                for (int i = 0; i <= xIndex; i++) {
+                                    IQGate gt = c.gates.get(i);
+                                    gt.execute(s2);
+                                }
+                                parent.propertiesBox.showState(s2);
                             }
                             repaintVP();
                         } else {

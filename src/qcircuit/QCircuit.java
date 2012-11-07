@@ -83,4 +83,24 @@ public class QCircuit implements IQCircuit {
     public ComplexMatrix toInverseMatrix() {
         return this.toMatrix().complexTranspose();
     }
+
+    public IQCircuit toInverseCircuit() {
+        QCircuit result = new QCircuit(this.bits, this.origin.x, this.origin.y);
+        result.color = this.color;
+        result.excessWire = this.excessWire;
+        result.gateSize = this.gateSize;
+        result.gateSpace = this.gateSpace;
+        result.scale = this.scale;
+        for (int i = 0; i < bits; i++) {
+            result.wireColorsSelected[i] = this.wireColorsSelected[i];
+            result.wireColorsUnselected[i] = this.wireColorsUnselected[i];
+        }
+        result.wireSpace = this.wireSpace;
+        
+        for (int i = this.gates.size() - 1; i >= 0; i--) {
+            result.gates.add(this.gates.get(i).toInverseGate());
+        }
+        
+        return result;
+    }
 }

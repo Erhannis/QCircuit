@@ -112,4 +112,16 @@ public class Hadamard implements IQGate {
     public ComplexMatrix toInverseMatrix() {
         return this.toMatrix();
     }
+    
+    public IQGate toInverseGate() {
+        return this.copy();
+    }
+    
+    /**
+     * Doesn't copy color.
+     * @return 
+     */
+    public IQGate copy() {
+        return new Hadamard(this.bit, this.bitcount);
+    }
 }

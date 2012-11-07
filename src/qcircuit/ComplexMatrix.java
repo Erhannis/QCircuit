@@ -4,6 +4,10 @@
  */
 package qcircuit;
 
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+
 /**
  *
  * @author erhannis
@@ -40,6 +44,217 @@ public class ComplexMatrix {
         imag.deleteCharAt(imag.length() - 1);
         real.append(":" + imag);
         return real.toString();
+    }
+    
+    /**
+     * Returns a string formatted like<br/>
+     * /0.0+1.0i 0.0+0.0i 0.0+0.0i\
+     * |0.0+0.0i 1.0+0.0i 0.0+0.0i|
+     * \0.0+1.0i 0.0+0.0i 0.0-0.0i/
+     * 
+     * Strictness, 0-5, controls how precisely the edges
+     * line up. Higher values may make things look odd
+     * (like 0001.00+0000.00i, etc.), and may require extra
+     * processing. 3-5 ensure exact alignment; 5 shows + in front
+     * of all positive numbers, and 3-5 have 1-3 (respectively) fraction digits visible.
+     * 
+     * @param strictness
+     * @return 
+     */
+    public String toMatrixForm(int strictness) {
+        StringBuilder result = new StringBuilder();
+        NumberFormat nf = NumberFormat.getInstance();
+        switch (strictness) {
+            case 1:
+                for (int y = 0; y < rows; y++) {
+                    if (y == 0) {
+                        result.append("/");
+                    } else if (y == (rows - 1)) {
+                        result.append("\\");
+                    } else {
+                        result.append("|");
+                    }
+
+                    for (int x = 0; x < cols; x++) {
+                        result.append(values[y][x].toStringWPad(nf) + " ");
+                    }
+                    if (y == 0) {
+                        result.append("\\\n");
+                    } else if (y == (rows - 1)) {
+                        result.append("/\n");
+                    } else {
+                        result.append("|\n");
+                    }
+                }
+                break;
+            case 2:
+                nf.setMaximumFractionDigits(2);
+                nf.setMinimumFractionDigits(2);
+                nf.setMinimumIntegerDigits(4);
+                
+                for (int y = 0; y < rows; y++) {
+                    if (y == 0) {
+                        result.append("/");
+                    } else if (y == (rows - 1)) {
+                        result.append("\\");
+                    } else {
+                        result.append("|");
+                    }
+
+                    for (int x = 0; x < cols; x++) {
+                        result.append(values[y][x].toStringWPad(nf) + " ");
+                    }
+                    if (y == 0) {
+                        result.append("\\\n");
+                    } else if (y == (rows - 1)) {
+                        result.append("/\n");
+                    } else {
+                        result.append("|\n");
+                    }
+                }
+                break;
+            case 3:
+                nf.setMaximumFractionDigits(1);
+                nf.setMinimumFractionDigits(1);
+                int maxDigits = 0;                
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        int bucket = (int)(Math.log10(Math.abs(values[i][j].real)) + 1);
+                        if (bucket > maxDigits) {
+                            maxDigits = bucket;
+                        }
+                        bucket = (int)(Math.log10(Math.abs(values[i][j].imag)) + 1);
+                        if (bucket > maxDigits) {
+                            maxDigits = bucket;
+                        }
+                    }
+                }
+                nf.setMinimumIntegerDigits(maxDigits);
+                
+                for (int y = 0; y < rows; y++) {
+                    if (y == 0) {
+                        result.append("/");
+                    } else if (y == (rows - 1)) {
+                        result.append("\\");
+                    } else {
+                        result.append("|");
+                    }
+
+                    for (int x = 0; x < cols; x++) {
+                        result.append(values[y][x].toStringWPad(nf) + " ");
+                    }
+                    if (y == 0) {
+                        result.append("\\\n");
+                    } else if (y == (rows - 1)) {
+                        result.append("/\n");
+                    } else {
+                        result.append("|\n");
+                    }
+                }
+                break;
+            case 4:
+                nf.setMaximumFractionDigits(2);
+                nf.setMinimumFractionDigits(2);
+                maxDigits = 0;                
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        int bucket = (int)(Math.log10(Math.abs(values[i][j].real)) + 1);
+                        if (bucket > maxDigits) {
+                            maxDigits = bucket;
+                        }
+                        bucket = (int)(Math.log10(Math.abs(values[i][j].imag)) + 1);
+                        if (bucket > maxDigits) {
+                            maxDigits = bucket;
+                        }
+                    }
+                }
+                nf.setMinimumIntegerDigits(maxDigits);
+                
+                for (int y = 0; y < rows; y++) {
+                    if (y == 0) {
+                        result.append("/");
+                    } else if (y == (rows - 1)) {
+                        result.append("\\");
+                    } else {
+                        result.append("|");
+                    }
+
+                    for (int x = 0; x < cols; x++) {
+                        result.append(values[y][x].toStringWPad(nf) + " ");
+                    }
+                    if (y == 0) {
+                        result.append("\\\n");
+                    } else if (y == (rows - 1)) {
+                        result.append("/\n");
+                    } else {
+                        result.append("|\n");
+                    }
+                }
+                break;
+            case 5:
+                nf.setMaximumFractionDigits(3);
+                nf.setMinimumFractionDigits(3);
+                maxDigits = 0;                
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        int bucket = (int)(Math.log10(Math.abs(values[i][j].real)) + 1);
+                        if (bucket > maxDigits) {
+                            maxDigits = bucket;
+                        }
+                        bucket = (int)(Math.log10(Math.abs(values[i][j].imag)) + 1);
+                        if (bucket > maxDigits) {
+                            maxDigits = bucket;
+                        }
+                    }
+                }
+                nf.setMinimumIntegerDigits(maxDigits);
+                
+                for (int y = 0; y < rows; y++) {
+                    if (y == 0) {
+                        result.append("/");
+                    } else if (y == (rows - 1)) {
+                        result.append("\\");
+                    } else {
+                        result.append("|");
+                    }
+
+                    for (int x = 0; x < cols; x++) {
+                        result.append(values[y][x].toStringWSigns(nf) + " ");
+                    }
+                    if (y == 0) {
+                        result.append("\\\n");
+                    } else if (y == (rows - 1)) {
+                        result.append("/\n");
+                    } else {
+                        result.append("|\n");
+                    }
+                }
+                break;
+            case 0:
+            default:
+                for (int y = 0; y < rows; y++) {
+                    if (y == 0) {
+                        result.append("/");
+                    } else if (y == (rows - 1)) {
+                        result.append("\\");
+                    } else {
+                        result.append("|");
+                    }
+
+                    for (int x = 0; x < cols; x++) {
+                        result.append(values[y][x].toString(nf) + " ");
+                    }
+                    if (y == 0) {
+                        result.append("\\\n");
+                    } else if (y == (rows - 1)) {
+                        result.append("/\n");
+                    } else {
+                        result.append("|\n");
+                    }
+                }
+                break;
+        }
+        return result.toString();
     }
     
     public ComplexMatrix times(ComplexMatrix b) {
