@@ -333,6 +333,11 @@ public class QViewport extends javax.swing.JPanel {
                                         if (parent.currentLoadedCircuit != null) {
                                             parent.currentLoadedCircuit.origin.x = clickX;
                                             parent.currentLoadedCircuit.origin.y = clickY;
+                                            if (parent.isTestRun) {                                            
+                                                newState = new QState(parent.currentLoadedCircuit.bits);
+                                                newState.initZeros();
+                                                parent.states.add(newState);
+                                            }
                                             parent.circuits.add(parent.currentLoadedCircuit);
                                             parent.currentLoadedCircuit = null;
                                             ctrlEvent = null;

@@ -268,7 +268,7 @@ public class ComplexMatrix {
                 for (int k = 0; k < b.rows; k++) {
                     value = value.plus(b.values[k][i].times(this.values[j][k]));
                 }
-                result.values[i][j] = value;
+                result.values[j][i] = value;
             }
         }
         return result;

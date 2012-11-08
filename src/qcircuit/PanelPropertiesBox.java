@@ -11,6 +11,15 @@
 package qcircuit;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
 /**
@@ -97,6 +106,9 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
         panelStateProps = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         areaStateText = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        areaLog = new javax.swing.JTextArea();
 
         setName("Form"); // NOI18N
 
@@ -373,6 +385,34 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
 
         tabsTabs.addTab(resourceMap.getString("panelStateProps.TabConstraints.tabTitle"), panelStateProps); // NOI18N
 
+        jPanel1.setName("jPanel1"); // NOI18N
+
+        jScrollPane4.setName("jScrollPane4"); // NOI18N
+
+        areaLog.setColumns(20);
+        areaLog.setRows(5);
+        areaLog.setName("areaLog"); // NOI18N
+        jScrollPane4.setViewportView(areaLog);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tabsTabs.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -445,7 +485,7 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
 
     private void btnGateToMatrixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGateToMatrixActionPerformed
         if (parent.vp.selectedGate != null) {
-            areaGateText.setLineWrap(true);
+            areaGateText.setLineWrap(false);
             areaGateText.setWrapStyleWord(false);
             if ((evt.getModifiers() & ActionEvent.CTRL_MASK) == 0) {
                 areaGateText.setText(parent.vp.selectedGate.toMatrix().toSquareExportString());
@@ -457,7 +497,7 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
 
     private void btnCircuitToMatrixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCircuitToMatrixActionPerformed
         if (parent.vp.selectedCircuit != null) {
-            areaCircuitText.setLineWrap(true);
+            areaCircuitText.setLineWrap(false);
             areaCircuitText.setWrapStyleWord(false);
             if ((evt.getModifiers() & ActionEvent.CTRL_MASK) == 0) {
                 areaCircuitText.setText(parent.vp.selectedCircuit.toMatrix().toSquareExportString());
@@ -524,9 +564,10 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSaveGateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea areaCircuitText;
-    private javax.swing.JTextArea areaGateText;
-    private javax.swing.JTextArea areaStateText;
+    public javax.swing.JTextArea areaCircuitText;
+    public javax.swing.JTextArea areaGateText;
+    private javax.swing.JTextArea areaLog;
+    public javax.swing.JTextArea areaStateText;
     private javax.swing.JButton btnCircuitInfo;
     private javax.swing.JButton btnCircuitMatrixForm;
     private javax.swing.JButton btnCircuitToMatrix;
@@ -537,9 +578,11 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
     private javax.swing.JButton btnGateToMatrix;
     private javax.swing.JButton btnSaveCircuit;
     private javax.swing.JButton btnSaveGate;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPanel panelCircuitProps;
     private javax.swing.JPanel panelGateProps;
     private javax.swing.JPanel panelStateProps;

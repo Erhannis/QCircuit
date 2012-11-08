@@ -55,6 +55,12 @@ public class QCircuit implements IQCircuit {
         this.gates = new ArrayList<IQGate>();
         this.origin.x = x;
         this.origin.y = y;
+        this.wireColorsSelected = new Color[bits];
+        this.wireColorsUnselected = new Color[bits];
+        for (int i = 0; i < bits; i++) {
+            this.wireColorsSelected[i] = COLOR_SELECTED;
+            this.wireColorsUnselected[i] = COLOR_UNSELECTED;
+        }
         
         init();
     }

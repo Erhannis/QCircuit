@@ -17,11 +17,16 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.AbstractAction;
@@ -348,7 +353,7 @@ public class QCircuitView extends FrameView {
                 .addComponent(radioToggle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioStateProbe)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addComponent(boxTestRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioProbRound)
@@ -373,7 +378,7 @@ public class QCircuitView extends FrameView {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 450, Short.MAX_VALUE)
+            .addGap(0, 474, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(jPanel3);
@@ -388,7 +393,7 @@ public class QCircuitView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 667, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -593,6 +598,9 @@ private void mitemSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 private void mitemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemOpenActionPerformed
     if (chooser.showOpenDialog(this.getFrame()) == JFileChooser.APPROVE_OPTION) {
         loadAll(chooser.getSelectedFile());
+        if (isTestRun) {
+            initTestRun();
+        }
         vp.repaintVP();
     }
 }//GEN-LAST:event_mitemOpenActionPerformed
@@ -605,7 +613,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     this.showAboutBox();
 }//GEN-LAST:event_aboutMenuItemActionPerformed
 
-    public int VERSION = 2;
+    public int VERSION = 3;
 
     public void saveAll(File file) {
         FileOutputStream fos = null;
@@ -642,7 +650,9 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     } else if (ig instanceof MatrixGate) {
                         dos.writeUTF("Matrix");
                         dos.writeInt(((MatrixGate)ig).bits);
-                        dos.writeUTF(((MatrixGate)ig).matrix.toSquareExportString());                        
+                        byte[] bucket = ((MatrixGate) ig).matrix.toSquareExportString().getBytes("US-ASCII");
+                        dos.writeInt(bucket.length);
+                        dos.write(bucket);
                     } else {
                         dos.writeUTF("Unknown");
                     }
@@ -661,6 +671,54 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 Logger.getLogger(QCircuitView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void runBenchmarks(int i) {
+        long startTime = -1;
+        long thisTime = -1;
+        long lastTime = -1;
+        QCircuit c = new QCircuit(i);
+        c.gates.add(new Hadamard(0, i));
+        c.gates.add(new Hadamard(1, i));
+        propertiesBox.showCircuit(c);
+        propertiesBox.areaCircuitText.setLineWrap(true);
+        propertiesBox.areaCircuitText.setWrapStyleWord(false);
+        startTime = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
+        thisTime = System.currentTimeMillis();
+        System.out.println("Started CTM: \t" + (thisTime - lastTime) + " \t" + (thisTime - startTime));
+        lastTime = thisTime;
+        ComplexMatrix cm = c.toMatrix();
+        thisTime = System.currentTimeMillis();
+        System.out.println("Mtx done: \t" + (thisTime - lastTime) + " \t" + (thisTime - startTime));
+        lastTime = thisTime;
+        String s = cm.toSquareExportString();
+        thisTime = System.currentTimeMillis();
+        System.out.println("String done: \t" + (thisTime - lastTime) + " \t" + (thisTime - startTime));
+        lastTime = thisTime;
+
+        FileWriter fw;
+        try {
+            fw = new FileWriter(new File("/tmp/mtx.txt"));
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.append(s);
+            bw.flush();
+            fw.flush();
+            fw.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PanelPropertiesBox.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PanelPropertiesBox.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        thisTime = System.currentTimeMillis();
+        System.out.println("File saved: \t" + (thisTime - lastTime) + " \t" + (thisTime - startTime));
+        lastTime = thisTime;
+
+        propertiesBox.areaCircuitText.setText(s);
+        thisTime = System.currentTimeMillis();
+        System.out.println("Text set: \t" + (thisTime - lastTime) + " \t" + (thisTime - startTime));
+        lastTime = thisTime;
+        System.out.println();
     }
 
     public void saveCircuit(QCircuit c, File file) {
@@ -695,7 +753,9 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 } else if (ig instanceof MatrixGate) {
                     dos.writeUTF("Matrix");
                     dos.writeInt(((MatrixGate) ig).bits);
-                    dos.writeUTF(((MatrixGate) ig).matrix.toSquareExportString());
+                    byte[] bucket = ((MatrixGate) ig).matrix.toSquareExportString().getBytes("US-ASCII");
+                    dos.writeInt(bucket.length);
+                    dos.write(bucket);
                 } else {
                     dos.writeUTF("Unknown");
                 }
@@ -736,7 +796,9 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             } else if (ig instanceof MatrixGate) {
                 dos.writeUTF("Matrix");
                 dos.writeInt(((MatrixGate) ig).bits);
-                dos.writeUTF(((MatrixGate) ig).matrix.toSquareExportString());
+                byte[] bucket = ((MatrixGate) ig).matrix.toSquareExportString().getBytes("US-ASCII");
+                dos.writeInt(bucket.length);
+                dos.write(bucket);
             } else {
                 dos.writeUTF("Unknown");
             }
@@ -809,6 +871,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     break;
                 }
                 case 2:
+                case 3:
                 {
                     String fileType = dis.readUTF();
                     if ("QCircuitSet".equals(fileType)) {
@@ -844,7 +907,15 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                                     c.gates.add(h);
                                 } else if ("Matrix".equals(type)) {
                                     int bitcount = dis.readInt();
-                                    String csv = dis.readUTF();
+                                    String csv = null;
+                                    if (version == 2) {
+                                        csv = dis.readUTF();
+                                    } else if (version == 3) {
+                                        int bucketLength = dis.readInt();
+                                        byte[] bucket = new byte[bucketLength];
+                                        dis.read(bucket);
+                                        csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
+                                    }
                                     String[] mtxs = csv.split(":");
                                     MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
                                     c.gates.add(mg);
@@ -886,7 +957,15 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                                 c.gates.add(h);
                             } else if ("Matrix".equals(type)) {
                                 int bitcount = dis.readInt();
-                                String csv = dis.readUTF();
+                                String csv = null;
+                                if (version == 2) {
+                                    csv = dis.readUTF();
+                                } else if (version == 3) {
+                                    int bucketLength = dis.readInt();
+                                    byte[] bucket = new byte[bucketLength];
+                                    dis.read(bucket);
+                                    csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
+                                }
                                 String[] mtxs = csv.split(":");
                                 MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
                                 c.gates.add(mg);
@@ -897,6 +976,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             }
                         }
                         currentLoadedCircuit = c;
+                        radioAddCircuit.setSelected(true);
                     } else if ("QCircuitGate".equals(fileType)) {
                         String type = dis.readUTF();
                         if ("CNot".equals(type)) {
@@ -908,17 +988,28 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             int totalbits = dis.readInt();
                             CNot cn = new CNot(bitsarray, totalbits);
                             currentLoadedGate = cn;
+                            radioAddMatrixGate.setSelected(true);
                         } else if ("Hadamard".equals(type)) {
                             int bit = dis.readInt();
                             int totalbits = dis.readInt();
                             Hadamard h = new Hadamard(bit, totalbits);
                             currentLoadedGate = h;
+                            radioAddMatrixGate.setSelected(true);
                         } else if ("Matrix".equals(type)) {
                             int bitcount = dis.readInt();
-                            String csv = dis.readUTF();
+                            String csv = null;
+                            if (version == 2) {
+                                csv = dis.readUTF();
+                            } else if (version == 3) {
+                                int bucketLength = dis.readInt();
+                                byte[] bucket = new byte[bucketLength];
+                                dis.read(bucket);
+                                csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
+                            }
                             String[] mtxs = csv.split(":");
                             MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
                             currentLoadedGate = mg;
+                            radioAddMatrixGate.setSelected(true);
                         } else if ("Unknown".equals(type)) {
                             System.err.println("Read attempt to store a gate that was unknown.");
                             currentLoadedGate = null;
