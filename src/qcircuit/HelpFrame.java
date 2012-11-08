@@ -51,6 +51,9 @@ public class HelpFrame extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Thanks to Russ Hayward on StackOverflow.com for this ScrollPaneWidthTrackingPanel class.
+     */
     public class ScrollPaneWidthTrackingPanel extends JPanel implements Scrollable {
 
         private static final long serialVersionUID = 1L;
@@ -88,24 +91,6 @@ public class HelpFrame extends javax.swing.JFrame {
     
     /** Creates new form HelpFrame */
     public HelpFrame(String helpText) {
-//        ArrayList<Method> methods = new ArrayList<Method>();
-//        Class c = HelpFrame.class;
-//        while (c != null) {
-//            Method[] bucket = c.getDeclaredMethods();
-//            for (int i = 0; i < bucket.length; i++) {
-//                methods.add(bucket[i]);
-//            }
-//            Class d = c.getSuperclass();
-//            if (d == null || d == c) {
-//                break;
-//            }
-//            c = d;
-//        }
-//        StringBuilder sb = new StringBuilder();
-//        for (int i = 0; i < methods.size(); i++) {
-//            sb.append(i + ":" + methods.get(i).getName() + ", ");
-//        }
-//        System.out.println(sb.toString());
         initComponents();
         
 //        jLabel1.getText();

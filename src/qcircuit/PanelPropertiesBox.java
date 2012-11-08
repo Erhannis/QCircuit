@@ -391,6 +391,8 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
 
         areaLog.setColumns(20);
         areaLog.setRows(5);
+        areaLog.setText(resourceMap.getString("areaLog.text")); // NOI18N
+        areaLog.setEnabled(false);
         areaLog.setName("areaLog"); // NOI18N
         jScrollPane4.setViewportView(areaLog);
 
