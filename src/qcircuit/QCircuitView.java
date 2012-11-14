@@ -542,17 +542,19 @@ public void deleteSelected() {
 private void radioAddMatrixGateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioAddMatrixGateActionPerformed
     currentLoadedGate = null;
     String input = JOptionPane.showInputDialog("Please input the matrix in the form of either\none list of 2^(2n) real numbers, separated by semicolons, or\ntwo such lists (real and complex coefficients), separated from each other by a colon.", null);
-    String[] strings = input.split(":");
-    if (strings.length == 1) {
-        MatrixGate matrixGate = new MatrixGate(strings[0]);
-        currentGateMatrix = matrixGate.matrix;
-        matrixBits = matrixGate.bits;
-    } else if (strings.length == 2) {
-        MatrixGate matrixGate = new MatrixGate(strings[0], strings[1]);
-        currentGateMatrix = matrixGate.matrix;
-        matrixBits = matrixGate.bits;
-    } else {
-        JOptionPane.showMessageDialog(null, "Your input registers more than one : (or less than 0?).  This is invalid.", input, busyIconIndex);
+    if (input != null) {
+        String[] strings = input.split(":");
+        if (strings.length == 1) {
+            MatrixGate matrixGate = new MatrixGate(strings[0]);
+            currentGateMatrix = matrixGate.matrix;
+            matrixBits = matrixGate.bits;
+        } else if (strings.length == 2) {
+            MatrixGate matrixGate = new MatrixGate(strings[0], strings[1]);
+            currentGateMatrix = matrixGate.matrix;
+            matrixBits = matrixGate.bits;
+        } else {
+            JOptionPane.showMessageDialog(null, "Your input registers more than one : (or less than 0?).  This is invalid.", input, busyIconIndex);
+        }
     }
 }//GEN-LAST:event_radioAddMatrixGateActionPerformed
 
