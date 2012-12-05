@@ -177,6 +177,7 @@ public class QCircuitView extends FrameView {
         radioAddMatrixGate = new javax.swing.JRadioButton();
         radioStateProbe = new javax.swing.JRadioButton();
         radioTrueMeasure = new javax.swing.JRadioButton();
+        radioAddPauliZ = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -309,6 +310,10 @@ public class QCircuitView extends FrameView {
             }
         });
 
+        groupTools.add(radioAddPauliZ);
+        radioAddPauliZ.setText(resourceMap.getString("radioAddPauliZ.text")); // NOI18N
+        radioAddPauliZ.setName("radioAddPauliZ"); // NOI18N
+
         javax.swing.GroupLayout panelToolbarLayout = new javax.swing.GroupLayout(panelToolbar);
         panelToolbar.setLayout(panelToolbarLayout);
         panelToolbarLayout.setHorizontalGroup(
@@ -331,7 +336,8 @@ public class QCircuitView extends FrameView {
                     .addComponent(radioSelectCircuit)
                     .addComponent(radioSelectGate)
                     .addComponent(radioToggle)
-                    .addComponent(radioStateProbe))
+                    .addComponent(radioStateProbe)
+                    .addComponent(radioAddPauliZ))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelToolbarLayout.setVerticalGroup(
@@ -344,6 +350,8 @@ public class QCircuitView extends FrameView {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioAddHadamard)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioAddPauliZ)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioAddMatrixGate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioSelectCircuit)
@@ -353,7 +361,7 @@ public class QCircuitView extends FrameView {
                 .addComponent(radioToggle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioStateProbe)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(boxTestRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioProbRound)
@@ -374,11 +382,11 @@ public class QCircuitView extends FrameView {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGap(0, 679, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 474, Short.MAX_VALUE)
+            .addGap(0, 450, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(jPanel3);
@@ -393,7 +401,7 @@ public class QCircuitView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 667, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -582,6 +590,9 @@ private void mitemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 private void mitemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitemNewActionPerformed
     circuits = new ArrayList<QCircuit>();
     states = null;
+//    isTestRun = false;
+//    boxTestRun.setSelected(false);
+    initTestRun();
     vp.selectedCircuit = null;
     propertiesBox.onSelectedCircuitChanged();
     vp.selectedGate = null;
@@ -615,7 +626,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     this.showAboutBox();
 }//GEN-LAST:event_aboutMenuItemActionPerformed
 
-    public int VERSION = 3;
+    public int VERSION = 4;
 
     public void saveAll(File file) {
         FileOutputStream fos = null;
@@ -649,6 +660,10 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                         dos.writeUTF("Hadamard");
                         dos.writeInt(((Hadamard)ig).bit);                        
                         dos.writeInt(((Hadamard)ig).bitcount);
+                    } else if (ig instanceof PauliZ) {
+                        dos.writeUTF("PauliZ");
+                        dos.writeInt(((PauliZ)ig).bit);                        
+                        dos.writeInt(((PauliZ)ig).bitcount);
                     } else if (ig instanceof MatrixGate) {
                         dos.writeUTF("Matrix");
                         dos.writeInt(((MatrixGate)ig).bits);
@@ -752,6 +767,10 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     dos.writeUTF("Hadamard");
                     dos.writeInt(((Hadamard) ig).bit);
                     dos.writeInt(((Hadamard) ig).bitcount);
+                } else if (ig instanceof PauliZ) {
+                    dos.writeUTF("PauliZ");
+                    dos.writeInt(((PauliZ) ig).bit);
+                    dos.writeInt(((PauliZ) ig).bitcount);
                 } else if (ig instanceof MatrixGate) {
                     dos.writeUTF("Matrix");
                     dos.writeInt(((MatrixGate) ig).bits);
@@ -795,6 +814,10 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 dos.writeUTF("Hadamard");
                 dos.writeInt(((Hadamard) ig).bit);
                 dos.writeInt(((Hadamard) ig).bitcount);
+            } else if (ig instanceof PauliZ) {
+                dos.writeUTF("PauliZ");
+                dos.writeInt(((PauliZ) ig).bit);
+                dos.writeInt(((PauliZ) ig).bitcount);
             } else if (ig instanceof MatrixGate) {
                 dos.writeUTF("Matrix");
                 dos.writeInt(((MatrixGate) ig).bits);
@@ -874,6 +897,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 }
                 case 2:
                 case 3:
+                case 4:
                 {
                     String fileType = dis.readUTF();
                     if ("QCircuitSet".equals(fileType)) {
@@ -907,6 +931,11 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                                     int totalbits = dis.readInt();
                                     Hadamard h = new Hadamard(bit, totalbits);
                                     c.gates.add(h);
+                                } else if ("PauliZ".equals(type)) {
+                                    int bit = dis.readInt();
+                                    int totalbits = dis.readInt();
+                                    PauliZ z = new PauliZ(bit, totalbits);
+                                    c.gates.add(z);
                                 } else if ("Matrix".equals(type)) {
                                     int bitcount = dis.readInt();
                                     String csv = null;
@@ -957,6 +986,11 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                                 int totalbits = dis.readInt();
                                 Hadamard h = new Hadamard(bit, totalbits);
                                 c.gates.add(h);
+                            } else if ("PauliZ".equals(type)) {
+                                int bit = dis.readInt();
+                                int totalbits = dis.readInt();
+                                PauliZ z = new PauliZ(bit, totalbits);
+                                c.gates.add(z);
                             } else if ("Matrix".equals(type)) {
                                 int bitcount = dis.readInt();
                                 String csv = null;
@@ -996,6 +1030,12 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             int totalbits = dis.readInt();
                             Hadamard h = new Hadamard(bit, totalbits);
                             currentLoadedGate = h;
+                            radioAddMatrixGate.setSelected(true);
+                        } else if ("PauliZ".equals(type)) {
+                            int bit = dis.readInt();
+                            int totalbits = dis.readInt();
+                            PauliZ z = new PauliZ(bit, totalbits);
+                            currentLoadedGate = z;
                             radioAddMatrixGate.setSelected(true);
                         } else if ("Matrix".equals(type)) {
                             int bitcount = dis.readInt();
@@ -1067,6 +1107,7 @@ public void initTestRun() {
     public javax.swing.JRadioButton radioAddCircuit;
     public javax.swing.JRadioButton radioAddHadamard;
     public javax.swing.JRadioButton radioAddMatrixGate;
+    public javax.swing.JRadioButton radioAddPauliZ;
     public javax.swing.JRadioButton radioFakeMeasure;
     public javax.swing.JRadioButton radioProb;
     public javax.swing.JRadioButton radioProbRound;

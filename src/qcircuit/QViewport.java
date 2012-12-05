@@ -130,6 +130,15 @@ public class QViewport extends javax.swing.JPanel {
                     g.draw(new java.awt.geom.Line2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) - (c.gateSize * 0.3), c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) + (c.gateSize * 0.3)));
                     g.draw(new java.awt.geom.Line2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) + (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) - (c.gateSize * 0.3), c.origin.x + c.excessWire + (c.gateSpace * i) + (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) + (c.gateSize * 0.3)));
                     g.draw(new java.awt.geom.Line2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace), c.origin.x + c.excessWire + (c.gateSpace * i) + (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace)));
+                } else if (gt instanceof PauliZ){
+                    PauliZ cn = (PauliZ)gt;
+                    g.setColor(COLOR_BACKGROUND);
+                    g.fill(new java.awt.geom.Rectangle2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.5), c.origin.y + (cn.bit * c.wireSpace) - (c.gateSize * 0.5), c.gateSize, c.gateSize));
+                    g.setColor(gt.getColor());
+                    g.draw(new java.awt.geom.Rectangle2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.5), c.origin.y + (cn.bit * c.wireSpace) - (c.gateSize * 0.5), c.gateSize, c.gateSize));
+                    g.draw(new java.awt.geom.Line2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) - (c.gateSize * 0.3), c.origin.x + c.excessWire + (c.gateSpace * i) + (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) - (c.gateSize * 0.3)));
+                    g.draw(new java.awt.geom.Line2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) + (c.gateSize * 0.3), c.origin.x + c.excessWire + (c.gateSpace * i) + (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) + (c.gateSize * 0.3)));
+                    g.draw(new java.awt.geom.Line2D.Double(c.origin.x + c.excessWire + (c.gateSpace * i) + (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) - (c.gateSize * 0.3), c.origin.x + c.excessWire + (c.gateSpace * i) - (c.gateSize * 0.2), c.origin.y + (cn.bit * c.wireSpace) + (c.gateSize * 0.3)));
                 } else if (gt instanceof MatrixGate){
                     MatrixGate mg = (MatrixGate)gt;
                     g.setColor(COLOR_BACKGROUND);
@@ -243,6 +252,9 @@ public class QViewport extends javax.swing.JPanel {
                         break;
                     case KeyEvent.VK_H:
                         parent.radioAddHadamard.setSelected(true);
+                        break;
+                    case KeyEvent.VK_Z:
+                        parent.radioAddPauliZ.setSelected(true);
                         break;
                     case KeyEvent.VK_M:
                         parent.radioAddMatrixGate.setSelected(true);
@@ -486,6 +498,71 @@ public class QViewport extends javax.swing.JPanel {
                                     public void addClick(double x, double y) {
                                         if (c != null) {
                                             g = new Hadamard(0, c.bits);
+                                            int xIndex = (int) (((x - c.origin.x - c.excessWire) / c.gateSpace) + 1);
+                                            int yIndex = (int) (((y - c.origin.y) / c.wireSpace) + 0.5);
+                                            if (xIndex < 0) {
+                                                xIndex = 0;
+                                            } else if (xIndex > c.gates.size()) {
+                                                xIndex = c.gates.size();
+                                            }
+                                            if (yIndex < 0) {
+                                                yIndex = 0;
+                                            } else if (yIndex >= c.bits) {
+                                                yIndex = c.bits - 1;
+                                            }
+                                            g.bit = yIndex;
+                                            c.gates.add(xIndex, g);
+                                            repaintVP();
+                                        } else {
+                                            //System.out.println("c is null!");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void release() {
+                                        if (c != null) {
+                                            c.color = QCircuit.COLOR_UNSELECTED;
+                                            repaintVP();
+                                        }
+                                    }
+                                };
+                            } else if (parent.groupTools.isSelected(parent.radioAddPauliZ.getModel())) {
+                                ctrlEvent = new CtrlEvent() {
+                                    public QCircuit c;
+                                    public PauliZ g;
+                                    
+                                    @Override
+                                    public void init() {
+                                        if (selectedGate != null) {
+                                            selectedGate.setSelected(false);
+                                            selectedGate = null;
+                                            parent.propertiesBox.onSelectedGateChanged();
+                                        }
+                                        selectedCircuit = null;
+                                        parent.propertiesBox.onSelectedCircuitChanged();
+                                        for (QCircuit c : parent.circuits) {
+                                            c.color = QCircuit.COLOR_UNSELECTED;
+                                        }
+                                        for (QCircuit c : parent.circuits) {
+                                            if (c.origin.x <= clickX &&
+                                                c.origin.y - (c.gateSize * 0.5) <= clickY &&
+                                                c.origin.x + (c.excessWire * 2) + (c.gateSpace * c.gates.size()) >= clickX &&
+                                                c.origin.y + (c.wireSpace * (c.bits - 1)) + (c.gateSize * 0.5) >= clickY) {
+                                                this.c = c;
+                                                c.color = QCircuit.COLOR_SELECTED;
+                                                break;
+                                            }
+                                        }
+                                        if (parent.circuits.size() == 1) {
+                                            addClick(clickX, clickY);
+                                        }
+                                        repaintVP();
+                                    }
+
+                                    @Override
+                                    public void addClick(double x, double y) {
+                                        if (c != null) {
+                                            g = new PauliZ(0, c.bits);
                                             int xIndex = (int) (((x - c.origin.x - c.excessWire) / c.gateSpace) + 1);
                                             int yIndex = (int) (((y - c.origin.y) / c.wireSpace) + 0.5);
                                             if (xIndex < 0) {

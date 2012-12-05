@@ -458,6 +458,9 @@ public class PanelPropertiesBox extends javax.swing.JPanel {
         } else if (g instanceof Hadamard) {
             Hadamard h = (Hadamard)g;
             sb.append("target bit: " + h.bit + "\n");
+        } else if (g instanceof PauliZ) {
+            PauliZ z = (PauliZ)g;
+            sb.append("target bit: " + z.bit + "\n");
         } else if (g instanceof MatrixGate) {
             MatrixGate m = (MatrixGate)g;
             sb.append("bits: " + m.bits + "\n");

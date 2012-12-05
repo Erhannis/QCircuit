@@ -15,7 +15,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="1" pref="667" max="32767" attributes="0"/>
+              <Component id="jSplitPane1" alignment="1" pref="661" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -82,6 +82,7 @@
                                   <Component id="radioSelectGate" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="radioToggle" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="radioStateProbe" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="radioAddPauliZ" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -97,6 +98,8 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioAddHadamard" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="radioAddPauliZ" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioAddMatrixGate" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioSelectCircuit" min="-2" max="-2" attributes="0"/>
@@ -106,7 +109,7 @@
                               <Component id="radioToggle" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioStateProbe" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="68" max="32767" attributes="0"/>
+                              <EmptySpace pref="14" max="32767" attributes="0"/>
                               <Component id="boxTestRun" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="radioProbRound" min="-2" max="-2" attributes="0"/>
@@ -310,6 +313,18 @@
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
                       </AuxValues>
                     </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioAddPauliZ">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="groupTools"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" resourceKey="radioAddPauliZ.text"/>
+                        <Property name="name" type="java.lang.String" value="radioAddPauliZ" noResource="true"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel3">
@@ -325,12 +340,12 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="672" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="679" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="474" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="450" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
