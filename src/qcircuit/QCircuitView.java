@@ -26,7 +26,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharsetDecoder;
-import java.nio.charset.StandardCharsets;
+//import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.AbstractAction;
@@ -916,7 +916,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                                         int bucketLength = dis.readInt();
                                         byte[] bucket = new byte[bucketLength];
                                         dis.read(bucket);
-                                        csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
+//                                        csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
                                     }
                                     String[] mtxs = csv.split(":");
                                     MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
@@ -966,7 +966,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                                     int bucketLength = dis.readInt();
                                     byte[] bucket = new byte[bucketLength];
                                     dis.read(bucket);
-                                    csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
+//                                    csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
                                 }
                                 String[] mtxs = csv.split(":");
                                 MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
@@ -1006,7 +1006,7 @@ private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                                 int bucketLength = dis.readInt();
                                 byte[] bucket = new byte[bucketLength];
                                 dis.read(bucket);
-                                csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
+//                                csv = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(bucket)).toString();
                             }
                             String[] mtxs = csv.split(":");
                             MatrixGate mg = new MatrixGate(mtxs[0], mtxs[1]);
