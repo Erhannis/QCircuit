@@ -351,6 +351,7 @@ public class QViewport extends javax.swing.JPanel {
                                                 parent.states.add(newState);
                                             }
                                             parent.circuits.add(parent.currentLoadedCircuit);
+                                            //TODO Allow multiple paste
                                             parent.currentLoadedCircuit = null;
                                             ctrlEvent = null;
                                             repaintVP();
@@ -723,6 +724,9 @@ public class QViewport extends javax.swing.JPanel {
                                 parent.propertiesBox.onSelectedGateChanged();
                             }
                             if (selectedCircuit != null) {
+                                if (selectedCircuit.gates.size() == 0) {
+                                    return;
+                                }
                                 int xIndex = (int)(((clickX - selectedCircuit.origin.x - selectedCircuit.excessWire) / selectedCircuit.gateSpace) + 0.5);
 //                                int yIndex = (int)(((clickY - selectedCircuit.origin.y) / selectedCircuit.wireSpace) + 0.5);
                                 if (xIndex < 0) {

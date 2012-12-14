@@ -167,8 +167,26 @@ public class QState {
             sb.append("(" + states[0].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(0), bits) + ">");
         }
         for (int i = 1; i < states.length; i++) {
-            sb.append(" + (" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
+            //TODO Provide formatting options
+            //sb.append(" + (" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
+            sb.append(" + \n(" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
         }
         return sb.toString();
+    }
+    
+    /**
+     * Returns the compound state of |a>x|b>.
+     * @param b
+     * @return 
+     */
+    public QState outerProduct(QState b) {
+        QState result = new QState(this.bits + b.bits, false);
+        int index = 0;
+        for (int i = 0; i < this.bits; i++) {
+            for (int j = 0; j < b.bits; j++) {
+                result.states[index++] = this.states[i].times(b.states[j]);
+            }
+        }
+        return result;
     }
 }
