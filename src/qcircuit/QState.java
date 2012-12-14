@@ -169,7 +169,9 @@ public class QState {
         for (int i = 1; i < states.length; i++) {
             //TODO Provide formatting options
             //sb.append(" + (" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
-            sb.append(" + \n(" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
+            if (states[i].normsqr() >= 0.000001) {
+                sb.append(" + \n(" + states[i].toString() + ")|" + QUtils.padLeft(Integer.toBinaryString(i), bits) + ">");
+            }
         }
         return sb.toString();
     }
